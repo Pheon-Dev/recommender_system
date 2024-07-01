@@ -600,54 +600,54 @@ for i, column in enumerate(numerical_columns, 1):
 plt.tight_layout()
 plt.show()
 
-# """OBSERVATIONS
-# There is presence of outliers in movieId and imdbId however they are identifiers, and treating them as numerical values for outlier removal can lead to incorrect data processing.So we keep the outliers.
-#
-# # **DATA PREPROCESSING**
-#
-# #Data Encoding
-# """
-#
-# # Check if 'genres' column exists in the DataFrame
-# if 'genres' in data.columns:
-#     # Convert genres to a list of genres
-#     data['genres'] = data['genres'].str.split('|')
-#
-#     # Convert the list of genres into separate columns
-#     data = data.explode('genres')
-#
-#     # One-hot encode genres
-#     data = pd.get_dummies(data, columns=['genres'], prefix='', prefix_sep='')
-#     print(data)
-# else:
-#     print("Error: 'genres' column not found in the DataFrame. It may have been overwritten.")
-#
-# from sklearn.model_selection import train_test_split
-# from sklearn.preprocessing import LabelEncoder
-#
-#  #Your specific user IDs
-# userid_x = 1  # Replace with the actual user ID
-# userid_y = 2  # Replace with the actual user ID
-#
-# # Include the specific user IDs in the dataset
-# additional_users = pd.DataFrame({'userId': [userid_x, userid_y], 'movieId': [0, 0], 'rating': [0, 0]})
-# data = pd.concat([data, additional_users], ignore_index=True)
-#
-# # Encode userId and movieId
-# user_encoder = LabelEncoder()
-# movie_encoder = LabelEncoder()
-#
-# data['userId'] = user_encoder.fit_transform(data['userId'])
-# data['movieId'] = movie_encoder.fit_transform(data['movieId'])
-#
-# # Encode the specific user IDs
-# encoded_userid_x = user_encoder.transform([userid_x])[0]
-# encoded_userid_y = user_encoder.transform([userid_y])[0]
-#
-# """# Standardisation
-#
-# """
-#
+"""OBSERVATIONS
+There is presence of outliers in movieId and imdbId however they are identifiers, and treating them as numerical values for outlier removal can lead to incorrect data processing.So we keep the outliers.
+
+# **DATA PREPROCESSING**
+
+#Data Encoding
+"""
+
+# Check if 'genres' column exists in the DataFrame
+if 'genres' in data.columns:
+    # Convert genres to a list of genres
+    data['genres'] = data['genres'].str.split('|')
+
+    # Convert the list of genres into separate columns
+    data = data.explode('genres')
+
+    # One-hot encode genres
+    data = pd.get_dummies(data, columns=['genres'], prefix='', prefix_sep='')
+    print(data)
+else:
+    print("Error: 'genres' column not found in the DataFrame. It may have been overwritten.")
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
+ #Your specific user IDs
+userid_x = 1  # Replace with the actual user ID
+userid_y = 2  # Replace with the actual user ID
+
+# Include the specific user IDs in the dataset
+additional_users = pd.DataFrame({'userId': [userid_x, userid_y], 'movieId': [0, 0], 'rating': [0, 0]})
+data = pd.concat([data, additional_users], ignore_index=True)
+
+# Encode userId and movieId
+user_encoder = LabelEncoder()
+movie_encoder = LabelEncoder()
+
+data['userId'] = user_encoder.fit_transform(data['userId'])
+data['movieId'] = movie_encoder.fit_transform(data['movieId'])
+
+# Encode the specific user IDs
+encoded_userid_x = user_encoder.transform([userid_x])[0]
+encoded_userid_y = user_encoder.transform([userid_y])[0]
+
+"""# Standardisation
+
+"""
+
 # from sklearn.preprocessing import StandardScaler
 #
 # # Normalize rating column (example)
