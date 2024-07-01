@@ -442,17 +442,17 @@ plt.show()
 #### 9.**WordCloud of Movie Tags**
 """
 
-#World cloud of movie tags
-from wordcloud import WordCloud
-
-all_tags = ' '.join(tags['tag'].dropna())
-wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_tags)
-
-plt.figure(figsize=(10, 6))
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis('off')
-plt.title('Word Cloud of Movie Tags')
-plt.show()
+# #World cloud of movie tags
+# from wordcloud import WordCloud
+#
+# all_tags = ' '.join(tags['tag'].dropna())
+# wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_tags)
+#
+# plt.figure(figsize=(10, 6))
+# plt.imshow(wordcloud, interpolation='bilinear')
+# plt.axis('off')
+# plt.title('Word Cloud of Movie Tags')
+# plt.show()
 
 """### **Observations**: Most used Tag is Netflix queue.
 
@@ -502,744 +502,744 @@ plt.show()
 #### 12.**User Activity Scatter Plot**
 """
 
-# # Scatter plot of user activity
-#
-# # Set a threshold for user activity differentiation
-# threshold_rating_count = 500  # For example, users with more than 500 ratings
-#
-# # Separate users with high and low numbers of ratings
-# active_users = user_activity[user_activity['rating_count'] > threshold_rating_count]
-# less_active_users = user_activity[user_activity['rating_count'] <= threshold_rating_count]
-#
-# plt.figure(figsize=(10, 6))
-# plt.scatter(active_users['userId'], active_users['rating_count'], alpha=0.5, color='purple', label='Active Users (> 500 ratings)')
-# plt.scatter(less_active_users['userId'], less_active_users['rating_count'], alpha=0.5, color='yellow', label='Less Active Users (<= 500 ratings)')
-# plt.xlabel('User ID')
-# plt.ylabel('Number of Ratings')
-# plt.title('Scatter Plot of User Activity')
-# plt.legend()
-# plt.show()
-#
-# """### **Observations**: most users rate the movies and also most users are inactive.
-#
-# #### 13.**Number of ratings per movie vs. average rating**
-# """
-#
-# # Set a threshold for average rating differentiation
-# threshold_rating_mean = 3.5
-#
-# # Separate movies with high and low average ratings
-# high_rating_movies = movie_stats[movie_stats['rating_mean'] >= threshold_rating_mean]
-# low_rating_movies = movie_stats[movie_stats['rating_mean'] < threshold_rating_mean]
-#
-# # Scatter plot of number of ratings per movie vs. average rating with different colors
-# plt.figure(figsize=(10, 6))
-# plt.scatter(high_rating_movies['rating_count'], high_rating_movies['rating_mean'], alpha=0.5, color='green', label='High Average Rating')
-# plt.scatter(low_rating_movies['rating_count'], low_rating_movies['rating_mean'], alpha=0.5, color='orange', label='Low Average Rating')
-# plt.xlabel('Number of Ratings per Movie')
-# plt.ylabel('Average Rating')
-# plt.title('Scatter Plot of Number of Ratings per Movie vs. Average Rating')
-# plt.legend()
-# plt.show()
-#
-# """### **Observations**: Average rating per movie is higher.
-#
-# #### 14.**Number of ratings per genre vs. average rating**
-# """
-#
-# # Separate genres with high and low average ratings
-# high_rating_genres = genre_stats[genre_stats['rating_mean'] >= threshold_genre_rating_mean]
-# low_rating_genres = genre_stats[genre_stats['rating_mean'] < threshold_genre_rating_mean]
-#
-# # Scatter plot of number of ratings per genre vs. average rating with different colors
-# plt.figure(figsize=(10, 6))
-# plt.scatter(high_rating_genres['rating_count'], high_rating_genres['rating_mean'], alpha=0.5, color='cyan', label='High Average Rating Genre')
-# plt.scatter(low_rating_genres['rating_count'], low_rating_genres['rating_mean'], alpha=0.5, color='magenta', label='Low Average Rating Genre')
-# plt.xlabel('Number of Ratings per Genre')
-# plt.ylabel('Average Rating')
-# plt.title('Scatter Plot of Number of Ratings per Genre vs. Average Rating')
-# plt.legend()
-# plt.show()
-#
-# """### **Observations**: Rating per genre is also higher
-#
-# #### 15**.Correlation Matrix**
-# """
-#
-# # Select numerical columns
-# numeric_cols = data.select_dtypes(include=['int64', 'float64']).columns
-#
-# # Create correlation matrix
-# corr_matrix = data[numeric_cols].corr()
-#
-# # Plot correlation heatmap
-# plt.figure(figsize=(12, 8))
-# sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
-# plt.title('Correlation Heatmap of Numerical Columns')
-# plt.show()
-#
-# """OBSERVATIONS
-#
-# # ***OUTLIER DETECTION***
-# """
-#
-# # Histograms for numerical features
-# data[[ 'movieId', 'imdbId', 'rating', 'timestamp_x', 'title', 'genres', 'tag',
-#        'timestamp_y']].hist(bins=30, figsize=(12, 8))
-# plt.show()
-#
-# # Create box plots for each numerical column
-# numerical_columns = ['movieId', 'imdbId', 'rating', 'timestamp_x', 'timestamp_y']
-#
-# plt.figure(figsize=(8, 6))
-# for i, column in enumerate(numerical_columns, 1):
-#     plt.subplot(2, 3, i)
-#     sns.boxplot(data=data[[column]])
-#     plt.title(f'Box Plot of {column}')
-#     plt.xlabel(column)
-# plt.tight_layout()
-# plt.show()
-#
-# """OBSERVATIONS
-# There is presence of outliers in movieId and imdbId however they are identifiers, and treating them as numerical values for outlier removal can lead to incorrect data processing.So we keep the outliers.
-#
-# # **DATA PREPROCESSING**
-#
-# #Data Encoding
-# """
-#
-# # Check if 'genres' column exists in the DataFrame
-# if 'genres' in data.columns:
-#     # Convert genres to a list of genres
-#     data['genres'] = data['genres'].str.split('|')
-#
-#     # Convert the list of genres into separate columns
-#     data = data.explode('genres')
-#
-#     # One-hot encode genres
-#     data = pd.get_dummies(data, columns=['genres'], prefix='', prefix_sep='')
-#     print(data)
-# else:
-#     print("Error: 'genres' column not found in the DataFrame. It may have been overwritten.")
-#
-# from sklearn.model_selection import train_test_split
-# from sklearn.preprocessing import LabelEncoder
-#
-#  #Your specific user IDs
-# userid_x = 1  # Replace with the actual user ID
-# userid_y = 2  # Replace with the actual user ID
-#
-# # Include the specific user IDs in the dataset
-# additional_users = pd.DataFrame({'userId': [userid_x, userid_y], 'movieId': [0, 0], 'rating': [0, 0]})
-# data = pd.concat([data, additional_users], ignore_index=True)
-#
-# # Encode userId and movieId
-# user_encoder = LabelEncoder()
-# movie_encoder = LabelEncoder()
-#
-# data['userId'] = user_encoder.fit_transform(data['userId'])
-# data['movieId'] = movie_encoder.fit_transform(data['movieId'])
-#
-# # Encode the specific user IDs
-# encoded_userid_x = user_encoder.transform([userid_x])[0]
-# encoded_userid_y = user_encoder.transform([userid_y])[0]
-#
-# """# Standardisation
-#
-# """
-#
-# from sklearn.preprocessing import StandardScaler
-#
-# # Normalize rating column (example)
-# scaler = StandardScaler()
-# data['rating'] = scaler.fit_transform(data[['rating']])
-# data
-#
-# """#Principal Component Analysis(PCA)"""
-#
-# from sklearn.decomposition import PCA
-# from sklearn.impute import SimpleImputer
-#
-# # Select numerical columns for PCA
-# numerical_columns = ['rating', 'timestamp_x', 'timestamp_y']
-#
-# # Impute missing values with the mean
-# imputer = SimpleImputer(strategy='mean')
-# data[numerical_columns] = imputer.fit_transform(data[numerical_columns])
-#
-# # Apply PCA
-# pca = PCA(n_components=2)  # Choose the number of components
-# principal_components = pca.fit_transform(data[numerical_columns])
-#
-# # Create a DataFrame with the principal components
-# pca_df = pd.DataFrame(data=principal_components, columns=['principal_component_1', 'principal_component_2'])
-#
-# # Make a copy of the original DataFrame to avoid modifying it in place
-# data_copy = data.copy()
-#
-# # Reset index of both DataFrames to ensure there are no duplicate indices
-# data_copy.reset_index(drop=True, inplace=True)
-# pca_df.reset_index(drop=True, inplace=True)
-#
-# # Concatenate the principal components with the copy of the original DataFrame
-# data_with_pca = pd.concat([data_copy, pca_df], axis=1)
-#
-# # Display the new DataFrame with PCA components
-# data_with_pca.head()
-#
-# # Plot the PCA components
-# plt.figure(figsize=(10, 7))
-# plt.scatter(pca_df['principal_component_1'], pca_df['principal_component_2'])
-# plt.title('PCA of MovieLens Data')
-# plt.xlabel('Principal Component 1')
-# plt.ylabel('Principal Component 2')
-# plt.grid(True)
-# plt.show()
-#
-# # Prepare the data for the model
-# X = data[['userId', 'movieId']].values
-# y = data['rating'].values
-#
-# # Split the data
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-#
-# """### **Data Sparcity**"""
-#
-# from scipy.sparse import csr_matrix
-#
-# def create_X(df):
-#     """
-#     Generates a sparse matrix from ratings dataframe.
-#
-#     Args:
-#         df: pandas dataframe containing 3 columns (userId, movieId, rating)
-#
-#     Returns:
-#         X: sparse matrix
-#         user_mapper: dict that maps user id's to user indices
-#         user_inv_mapper: dict that maps user indices to user id's
-#         movie_mapper: dict that maps movie id's to movie indices
-#         movie_inv_mapper: dict that maps movie indices to movie id's
-#     """
-#     M = df['userId'].nunique()
-#     N = df['movieId'].nunique()
-#
-#     user_mapper = dict(zip(np.unique(df["userId"]), list(range(M))))
-#     movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(N))))
-#
-#     user_inv_mapper = dict(zip(list(range(M)), np.unique(df["userId"])))
-#     movie_inv_mapper = dict(zip(list(range(N)), np.unique(df["movieId"])))
-#
-#     user_index = [user_mapper[i] for i in df['userId']]
-#     item_index = [movie_mapper[i] for i in df['movieId']]
-#
-#     X = csr_matrix((df["rating"], (user_index,item_index)), shape=(M,N))
-#     return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
-#
-# X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
-#
-# X.shape
-#
-# """Our X matrix contains 610 users and 9724  movies.
-#
-# Evaluating sparsity
-#
-# Here, we calculate sparsity by dividing the number of stored elements by total number of elements. The number of stored (non-empty) elements in our matrix (nnz) is equivalent to the number of ratings in our dataset.
-# """
-#
-# n_total = X.shape[0]*X.shape[1]
-# n_ratings = X.nnz
-# sparsity = n_ratings/n_total
-# print(f"Matrix sparsity: {round(sparsity*100,2)}%")
-#
-# """check which users and movies have few interactions."""
-#
-# n_ratings_per_user = X.getnnz(axis=1)
-# len(n_ratings_per_user)
-#
-# print(f"Most active user rated {n_ratings_per_user.max()} movies.")
-# print(f"Least active user rated {n_ratings_per_user.min()} movies.")
-#
-# n_ratings_per_movie = X.getnnz(axis=0)
-# len(n_ratings_per_movie)
-#
-# print(f"Most rated movie has {n_ratings_per_movie.max()} ratings.")
-# print(f"Least rated movie has {n_ratings_per_movie.min()} ratings.")
-#
-# plt.figure(figsize=(16, 4))
-#
-# # Plot for number of ratings per user
-# plt.subplot(1, 2, 1)
-# sns.kdeplot(n_ratings_per_user, fill=True)
-# plt.xlim(0)
-# plt.title("Number of Ratings Per User", fontsize=14)
-# plt.xlabel("Number of Ratings per User")
-# plt.ylabel("Density")
-#
-# # Plot for number of ratings per movie
-# plt.subplot(1, 2, 2)
-# sns.kdeplot(n_ratings_per_movie, fill=True)
-# plt.xlim(0)
-# plt.title("Number of Ratings Per Movie", fontsize=14)
-# plt.xlabel("Number of Ratings per Movie")
-# plt.ylabel("Density")
-#
-# plt.tight_layout()
-# plt.show()
-#
-"""#**MODELLING**
+# Scatter plot of user activity
 
-## 1.Baseline model: recommend the most popular movies
-"""
+# Set a threshold for user activity differentiation
+threshold_rating_count = 500  # For example, users with more than 500 ratings
 
-from sklearn.metrics import mean_squared_error
-from math import sqrt
+# Separate users with high and low numbers of ratings
+active_users = user_activity[user_activity['rating_count'] > threshold_rating_count]
+less_active_users = user_activity[user_activity['rating_count'] <= threshold_rating_count]
 
-# Baseline model: recommend the most popular movies
-most_popular = ratings.groupby('movieId').size().sort_values(ascending=False).index[:5]
-
-print("Most Popular Movies:")
-for movie_id in most_popular:
-    movie_title = movies[movies['movieId'] == movie_id]['title'].values[0]
-    print(f"Movie ID: {movie_id}, Title: {movie_title}")
-
-# Baseline RMSE (assuming using mean rating as prediction)
-mean_rating = ratings['rating'].mean()
-baseline_rmse = sqrt(mean_squared_error(ratings['rating'], np.full_like(ratings['rating'], mean_rating)))
-print(f"Baseline RMSE: {baseline_rmse}")
-
-"""## 2.Use KNNBasic for user-based collaborative filtering"""
-
-from sklearn.metrics.pairwise import cosine_similarity
-from surprise import Dataset, Reader, KNNBasic
-from surprise import accuracy
-from surprise.model_selection import train_test_split as surprise_train_test_split
-from collections import defaultdict
-
-# Load the data into Surprise format
-reader = Reader(rating_scale=(1, 5))
-data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
-
-# Split data into train and test sets
-trainset, testset = surprise_train_test_split(data, test_size=0.25, random_state=42)
-
-# Use KNNBasic for user-based collaborative filtering
-algo_user_based = KNNBasic(sim_options={'user_based': True})
-algo_user_based.fit(trainset)
-predictions_user_based = algo_user_based.test(testset)
-
-# Calculate RMSE
-user_based_rmse = accuracy.rmse(predictions_user_based)
-
-# Helper Functions for Precision and Recall at k
-def precision_at_k(predictions, k=10, threshold=3.5):
-    '''Return precision at k metric for each user and averaged over all users.'''
-    # First map the predictions to each user.
-    user_est_true = defaultdict(list)
-    for uid, _, true_r, est, _ in predictions:
-        user_est_true[uid].append((est, true_r))
-
-    precisions = dict()
-    for uid, user_ratings in user_est_true.items():
-        # Sort user ratings by estimated value
-        user_ratings.sort(key=lambda x: x[0], reverse=True)
-        # Number of relevant items in top k
-        n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
-        # Precision at k: relevant items / k
-        precisions[uid] = n_relevant / k
-
-    # Average precision at k over all users
-    return sum(prec for prec in precisions.values()) / len(precisions)
-
-def recall_at_k(predictions, k=10, threshold=3.5):
-    '''Return recall at k metric for each user and averaged over all users.'''
-    # First map the predictions to each user.
-    user_est_true = defaultdict(list)
-    for uid, _, true_r, est, _ in predictions:
-        user_est_true[uid].append((est, true_r))
-
-    recalls = dict()
-    for uid, user_ratings in user_est_true.items():
-        # Sort user ratings by estimated value
-        user_ratings.sort(key=lambda x: x[0], reverse=True)
-        # Number of relevant items in top k
-        n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
-        # Number of relevant items in the whole set
-        n_possible = sum((true_r >= threshold) for (_, true_r) in user_ratings)
-        # Recall at k: relevant items in top k / relevant items in the whole set
-        recalls[uid] = n_relevant / n_possible if n_possible != 0 else 1
-
-    # Average recall at k over all users
-    return sum(rec for rec in recalls.values()) / len(recalls)
-
-# Calculate other metrics (precision, recall, F1)
-user_based_precision = precision_at_k(predictions_user_based, k=5, threshold=4)
-user_based_recall = recall_at_k(predictions_user_based, k=5, threshold=4)
-user_based_f1 = 2 * (user_based_precision * user_based_recall) / (user_based_precision + user_based_recall)
-
-print(f"User-Based CF RMSE: {user_based_rmse}")
-print(f"User-Based CF Precision: {user_based_precision}")
-print(f"User-Based CF Recall: {user_based_recall}")
-print(f"User-Based CF F1: {user_based_f1}")
-
-"""## 3.Use KNNBasic for item-based collaborative filtering
-
-"""
-
-# Use KNNBasic for item-based collaborative filtering
-algo_item_based = KNNBasic(sim_options={'user_based': False})
-algo_item_based.fit(trainset)
-predictions_item_based = algo_item_based.test(testset)
-
-# Calculate RMSE
-item_based_rmse = accuracy.rmse(predictions_item_based)
-
-# Other metrics (precision, recall, F1)
-item_based_precision = precision_at_k(predictions_item_based, k=5, threshold=4)
-item_based_recall = recall_at_k(predictions_item_based, k=5, threshold=4)
-item_based_f1 = 2 * (item_based_precision * item_based_recall) / (item_based_precision + item_based_recall)
-
-print(f"Item-Based CF RMSE: {item_based_rmse}")
-print(f"Item-Based CF Precision: {item_based_precision}")
-print(f"Item-Based CF Recall: {item_based_recall}")
-print(f"Item-Based CF F1: {item_based_f1}")
-
-"""## 4.Use SVD for matrix factorization
-
-"""
-
-from surprise import SVD
-
-# Use SVD for matrix factorization
-algo_svd = SVD()
-algo_svd.fit(trainset)
-predictions_svd = algo_svd.test(testset)
-
-# Calculate RMSE
-svd_rmse = accuracy.rmse(predictions_svd)
-
-# Other metrics (precision, recall, F1)
-svd_precision = precision_at_k(predictions_svd, k=5, threshold=4)
-svd_recall = recall_at_k(predictions_svd, k=5, threshold=4)
-svd_f1 = 2 * (svd_precision * svd_recall) / (svd_precision + svd_recall)
-
-print(f"SVD RMSE: {svd_rmse}")
-print(f"SVD Precision: {svd_precision}")
-print(f"SVD Recall: {svd_recall}")
-print(f"SVD F1: {svd_f1}")
-
-"""## 5.Hybrid Model"""
-
-# Assume we have user-based and item-based CF predictions stored
-user_based_predictions = algo_user_based.test(testset)
-item_based_predictions = algo_item_based.test(testset)
-
-# Combine the predictions (simple average)
-hybrid_predictions = []
-for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions):
-    hybrid_est = (ub_pred.est + ib_pred.est) / 2
-    hybrid_predictions.append(surprise.Prediction(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, hybrid_est, ub_pred.details))
-
-# Calculate RMSE
-hybrid_rmse = accuracy.rmse(hybrid_predictions)
-
-# Other metrics (precision, recall, F1)
-hybrid_precision = precision_at_k(hybrid_predictions, k=5, threshold=4)
-hybrid_recall = recall_at_k(hybrid_predictions, k=5, threshold=4)
-hybrid_f1 = 2 * (hybrid_precision * hybrid_recall) / (hybrid_precision + hybrid_recall)
-
-print(f"Hybrid Model RMSE: {hybrid_rmse}")
-print(f"Hybrid Model Precision: {hybrid_precision}")
-print(f"Hybrid Model Recall: {hybrid_recall}")
-print(f"Hybrid Model F1: {hybrid_f1}")
-
-# Example values (replace with your actual computed metrics)
-metrics = ['RMSE', 'Precision', 'Recall', 'F1 Score']
-values = [0.8894, 0.6925, 0.4322, 0.5322]  # Example values, replace with your actual computed metrics
-
-# Plotting
-plt.figure(figsize=(6, 4))
-bars = plt.bar(metrics, values, color=['blue', 'green', 'orange', 'red'])
-
-# Adding text annotations
-for bar in bars:
-    yval = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width()/2, yval + 0.01, round(yval, 4), ha='center', va='bottom')
-
-# Adding labels and title
-plt.title('Performance Metrics of Hybrid Model')
-plt.xlabel('Metrics')
-plt.ylabel('Score')
-
-# Display the plot
+plt.figure(figsize=(10, 6))
+plt.scatter(active_users['userId'], active_users['rating_count'], alpha=0.5, color='purple', label='Active Users (> 500 ratings)')
+plt.scatter(less_active_users['userId'], less_active_users['rating_count'], alpha=0.5, color='yellow', label='Less Active Users (<= 500 ratings)')
+plt.xlabel('User ID')
+plt.ylabel('Number of Ratings')
+plt.title('Scatter Plot of User Activity')
+plt.legend()
 plt.show()
 
-"""#**MODEL EVALUATION**
+"""### **Observations**: most users rate the movies and also most users are inactive.
 
-**# 1.Most Popular Movies (Baseline)**:
-
-RMSE: 1.0425  
-on average, the predictions are off by around 1.0425 units (which typically corresponds to the rating scale used.
-
-
-**# 2.User-Based Collaborative Filtering:**
-
-
-RMSE: 0.9562
-
-Precision: 0.6895
-
-Recall: 0.4325
-
-F1 Score: 0.5316
-
-predictions are more accurate than the baseline, reducing the average error in predictions.
-successfully recommends relevant movies to users with a good balance between precision and recall.
-
-**# 3.Item-Based Collaborative Filtering:**
-
-RMSE: 0.9162
-
-Precision: 0.6574
-
-Recall: 0.4176
-
-F1 Score: 0.5108
-
-suggests further improvement in prediction accuracy compared to user-based CF and the baseline.
-performs well but
-
-
-**#4.SVD (Matrix Factorization):**
-
-RMSE: 0.8828
-
-Precision: 0.6911
-
-Recall: 0.4282
-
-F1 Score: 0.5288
-
-better accuracy than both CF methods and the baseline, indicating it can make more precise predictions.
-competitive performance with high precision and balanced recall, indicating effective recommendations.
-
-
-
-**#5.Hybrid Model (Combination of CF and Content-Based)**:
-
-RMSE: 0.8894
-
-Precision: 0.6925
-
-Recall: 0.4322
-
-F1 Score: 0.5322
-
-strong performance, slightly below SVD but still significantly better than baseline and CF methods.
-performs similarly to SVD, demonstrating robustness in recommending relevant movies with high precision and recall.
-
-### **COLDSTART PROBLEM**
+#### 13.**Number of ratings per movie vs. average rating**
 """
 
-n_movies = movies['movieId'].nunique()
-print(f"There are {n_movies} unique movies in our movies dataset.")
+# Set a threshold for average rating differentiation
+threshold_rating_mean = 3.5
 
-genres = set(g for G in movies['genres'] for g in G)
+# Separate movies with high and low average ratings
+high_rating_movies = movie_stats[movie_stats['rating_mean'] >= threshold_rating_mean]
+low_rating_movies = movie_stats[movie_stats['rating_mean'] < threshold_rating_mean]
 
-for g in genres:
-    movies[g] = movies.genres.transform(lambda x: int(g in x))
+# Scatter plot of number of ratings per movie vs. average rating with different colors
+plt.figure(figsize=(10, 6))
+plt.scatter(high_rating_movies['rating_count'], high_rating_movies['rating_mean'], alpha=0.5, color='green', label='High Average Rating')
+plt.scatter(low_rating_movies['rating_count'], low_rating_movies['rating_mean'], alpha=0.5, color='orange', label='Low Average Rating')
+plt.xlabel('Number of Ratings per Movie')
+plt.ylabel('Average Rating')
+plt.title('Scatter Plot of Number of Ratings per Movie vs. Average Rating')
+plt.legend()
+plt.show()
 
-movie_genres = movies.drop(columns=['movieId', 'title','genres'])
+"""### **Observations**: Average rating per movie is higher.
 
-movie_genres.head()
-
-from sklearn.metrics.pairwise import cosine_similarity
-
-cosine_sim = cosine_similarity(movie_genres, movie_genres)
-print(f"Dimensions of our genres cosine similarity matrix: {cosine_sim.shape}")
-
-"""### **ITEM-ITEM RECOMMENDER**"""
-
-from sklearn.neighbors import NearestNeighbors
-
-def find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, k, metric='cosine'):
-    X = X.T
-    neighbour_ids = []
-
-    movie_ind = movie_mapper[movie_id]
-    movie_vec = X[movie_ind]
-    if isinstance(movie_vec, (np.ndarray)):
-        movie_vec = movie_vec.reshape(1,-1)
-    # use k+1 since kNN output includes the movieId of interest
-    kNN = NearestNeighbors(n_neighbors=k+1, algorithm="brute", metric=metric)
-    kNN.fit(X)
-    neighbour = kNN.kneighbors(movie_vec, return_distance=False)
-    for i in range(0,k):
-        n = neighbour.item(i)
-        neighbour_ids.append(movie_inv_mapper[n])
-    neighbour_ids.pop(0)
-    return neighbour_ids
-
-"""find_similar_movies() takes in a movieId and X matrix mapper, and outputs a list of movies that are similar to the movieId of interest."""
-
-similar_movies = find_similar_movies(1, X, movie_mapper, movie_inv_mapper, k=10)
-similar_movies
-
-"""find_similar_movies() returns a list of movieId's that are most similar to your movie of interest.
-
-converting movie id to titles for movie it to tilte for title title recommendations
+#### 14.**Number of ratings per genre vs. average rating**
 """
 
-movie_titles = dict(zip(movies['movieId'], movies['title']))
+# Separate genres with high and low average ratings
+high_rating_genres = genre_stats[genre_stats['rating_mean'] >= threshold_genre_rating_mean]
+low_rating_genres = genre_stats[genre_stats['rating_mean'] < threshold_genre_rating_mean]
 
-movie_id = 1
+# Scatter plot of number of ratings per genre vs. average rating with different colors
+plt.figure(figsize=(10, 6))
+plt.scatter(high_rating_genres['rating_count'], high_rating_genres['rating_mean'], alpha=0.5, color='cyan', label='High Average Rating Genre')
+plt.scatter(low_rating_genres['rating_count'], low_rating_genres['rating_mean'], alpha=0.5, color='magenta', label='Low Average Rating Genre')
+plt.xlabel('Number of Ratings per Genre')
+plt.ylabel('Average Rating')
+plt.title('Scatter Plot of Number of Ratings per Genre vs. Average Rating')
+plt.legend()
+plt.show()
 
-similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='cosine', k=20)
-movie_title = movie_titles[movie_id]
+"""### **Observations**: Rating per genre is also higher
 
-print(f"Because you watched {movie_title}:")
-for i in similar_movies:
-    print(movie_titles[i])
+#### 15**.Correlation Matrix**
+"""
 
-"""this shows the 20 movies that are most similar to Toy Story (1995) movie. this only uses user ratings"""
+# Select numerical columns
+numeric_cols = data.select_dtypes(include=['int64', 'float64']).columns
 
-#using eucledian metric
-movie_id = 2
+# Create correlation matrix
+corr_matrix = data[numeric_cols].corr()
 
-similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='euclidean', k=20)
-movie_title = movie_titles[movie_id]
+# Plot correlation heatmap
+plt.figure(figsize=(12, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap of Numerical Columns')
+plt.show()
 
-print(f"Because you watched {movie_title}:")
-for i in similar_movies:
-    print(movie_titles[i])
+"""OBSERVATIONS
 
-"""### **MOVIE FINDER FROM KNEAREST ITEM ITEM RECOMMENDER**
+# ***OUTLIER DETECTION***
+"""
 
+# Histograms for numerical features
+data[[ 'movieId', 'imdbId', 'rating', 'timestamp_x', 'title', 'genres', 'tag',
+       'timestamp_y']].hist(bins=30, figsize=(12, 8))
+plt.show()
+
+# Create box plots for each numerical column
+numerical_columns = ['movieId', 'imdbId', 'rating', 'timestamp_x', 'timestamp_y']
+
+plt.figure(figsize=(8, 6))
+for i, column in enumerate(numerical_columns, 1):
+    plt.subplot(2, 3, i)
+    sns.boxplot(data=data[[column]])
+    plt.title(f'Box Plot of {column}')
+    plt.xlabel(column)
+plt.tight_layout()
+plt.show()
+
+"""OBSERVATIONS
+There is presence of outliers in movieId and imdbId however they are identifiers, and treating them as numerical values for outlier removal can lead to incorrect data processing.So we keep the outliers.
+
+# **DATA PREPROCESSING**
+
+#Data Encoding
+"""
+
+# Check if 'genres' column exists in the DataFrame
+if 'genres' in data.columns:
+    # Convert genres to a list of genres
+    data['genres'] = data['genres'].str.split('|')
+
+    # Convert the list of genres into separate columns
+    data = data.explode('genres')
+
+    # One-hot encode genres
+    data = pd.get_dummies(data, columns=['genres'], prefix='', prefix_sep='')
+    print(data)
+else:
+    print("Error: 'genres' column not found in the DataFrame. It may have been overwritten.")
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
+ #Your specific user IDs
+userid_x = 1  # Replace with the actual user ID
+userid_y = 2  # Replace with the actual user ID
+
+# Include the specific user IDs in the dataset
+additional_users = pd.DataFrame({'userId': [userid_x, userid_y], 'movieId': [0, 0], 'rating': [0, 0]})
+data = pd.concat([data, additional_users], ignore_index=True)
+
+# Encode userId and movieId
+user_encoder = LabelEncoder()
+movie_encoder = LabelEncoder()
+
+data['userId'] = user_encoder.fit_transform(data['userId'])
+data['movieId'] = movie_encoder.fit_transform(data['movieId'])
+
+# Encode the specific user IDs
+encoded_userid_x = user_encoder.transform([userid_x])[0]
+encoded_userid_y = user_encoder.transform([userid_y])[0]
+
+"""# Standardisation
 
 """
 
-# pip install fuzzywuzzy
+from sklearn.preprocessing import StandardScaler
 
-# pip install thefuzz
+# Normalize rating column (example)
+scaler = StandardScaler()
+data['rating'] = scaler.fit_transform(data[['rating']])
+data
 
-from fuzzywuzzy import process
+"""#Principal Component Analysis(PCA)"""
 
-#for similarity incase of spelling or ommisions to give most similar title
-def movie_finder(title):
-    all_titles = movies['title'].tolist()
-    closest_match = process.extractOne(title,all_titles)
-    return closest_match[0]
+from sklearn.decomposition import PCA
+from sklearn.impute import SimpleImputer
 
-title = movie_finder('ForRet Gmp')
-title
+# Select numerical columns for PCA
+numerical_columns = ['rating', 'timestamp_x', 'timestamp_y']
 
-"""**FUZZY WUZZY WORKS**
+# Impute missing values with the mean
+imputer = SimpleImputer(strategy='mean')
+data[numerical_columns] = imputer.fit_transform(data[numerical_columns])
 
-movie index mapper which maps a movie title to the index that it represents in our matrix.
+# Apply PCA
+pca = PCA(n_components=2)  # Choose the number of components
+principal_components = pca.fit_transform(data[numerical_columns])
+
+# Create a DataFrame with the principal components
+pca_df = pd.DataFrame(data=principal_components, columns=['principal_component_1', 'principal_component_2'])
+
+# Make a copy of the original DataFrame to avoid modifying it in place
+data_copy = data.copy()
+
+# Reset index of both DataFrames to ensure there are no duplicate indices
+data_copy.reset_index(drop=True, inplace=True)
+pca_df.reset_index(drop=True, inplace=True)
+
+# Concatenate the principal components with the copy of the original DataFrame
+data_with_pca = pd.concat([data_copy, pca_df], axis=1)
+
+# Display the new DataFrame with PCA components
+data_with_pca.head()
+
+# Plot the PCA components
+plt.figure(figsize=(10, 7))
+plt.scatter(pca_df['principal_component_1'], pca_df['principal_component_2'])
+plt.title('PCA of MovieLens Data')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.grid(True)
+plt.show()
+
+# Prepare the data for the model
+X = data[['userId', 'movieId']].values
+y = data['rating'].values
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+"""### **Data Sparcity**"""
+
+from scipy.sparse import csr_matrix
+
+def create_X(df):
+    """
+    Generates a sparse matrix from ratings dataframe.
+
+    Args:
+        df: pandas dataframe containing 3 columns (userId, movieId, rating)
+
+    Returns:
+        X: sparse matrix
+        user_mapper: dict that maps user id's to user indices
+        user_inv_mapper: dict that maps user indices to user id's
+        movie_mapper: dict that maps movie id's to movie indices
+        movie_inv_mapper: dict that maps movie indices to movie id's
+    """
+    M = df['userId'].nunique()
+    N = df['movieId'].nunique()
+
+    user_mapper = dict(zip(np.unique(df["userId"]), list(range(M))))
+    movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(N))))
+
+    user_inv_mapper = dict(zip(list(range(M)), np.unique(df["userId"])))
+    movie_inv_mapper = dict(zip(list(range(N)), np.unique(df["movieId"])))
+
+    user_index = [user_mapper[i] for i in df['userId']]
+    item_index = [movie_mapper[i] for i in df['movieId']]
+
+    X = csr_matrix((df["rating"], (user_index,item_index)), shape=(M,N))
+    return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
+
+X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
+
+X.shape
+
+"""Our X matrix contains 610 users and 9724  movies.
+
+Evaluating sparsity
+
+Here, we calculate sparsity by dividing the number of stored elements by total number of elements. The number of stored (non-empty) elements in our matrix (nnz) is equivalent to the number of ratings in our dataset.
 """
 
-movie_idx = dict(zip(movies['title'], list(movies.index)))
-idx = movie_idx[title]
-print(f"Movie index for 'Forrest Gump (1994)': {idx}")
+n_total = X.shape[0]*X.shape[1]
+n_ratings = X.nnz
+sparsity = n_ratings/n_total
+print(f"Matrix sparsity: {round(sparsity*100,2)}%")
 
-"""Using this handy movie_idx dictionary, we know that Jumanji is represented by index 1 in our matrix. Let's get the top 10 most similar movies to Jumanji."""
+"""check which users and movies have few interactions."""
 
-n_recommendations=10
-sim_scores = list(enumerate(cosine_sim[idx]))
-sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-sim_scores = sim_scores[1:(n_recommendations+1)]
-similar_movies = [i[0] for i in sim_scores]
+n_ratings_per_user = X.getnnz(axis=1)
+len(n_ratings_per_user)
 
-print(f"Because you watched {title}:")
-movies['title'].iloc[similar_movies]
+print(f"Most active user rated {n_ratings_per_user.max()} movies.")
+print(f"Least active user rated {n_ratings_per_user.min()} movies.")
 
-print(f"Because you watched {title}:")
-movies['title'].iloc[similar_movies]
+n_ratings_per_movie = X.getnnz(axis=0)
+len(n_ratings_per_movie)
 
-"""these recommendationms are similar to forest gump
+print(f"Most rated movie has {n_ratings_per_movie.max()} ratings.")
+print(f"Least rated movie has {n_ratings_per_movie.min()} ratings.")
 
-to get recommendations for other films
-"""
+plt.figure(figsize=(16, 4))
 
-def get_content_based_recommendations(title_string, n_recommendations=10):
-    title = movie_finder(title_string)
-    idx = movie_idx[title]
-    sim_scores = list(enumerate(cosine_sim[idx]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    sim_scores = sim_scores[1:(n_recommendations+1)]
-    similar_movies = [i[0] for i in sim_scores]
-    print(f"Because you watched {title}:")
-    print(movies['title'].iloc[similar_movies])
+# Plot for number of ratings per user
+plt.subplot(1, 2, 1)
+sns.kdeplot(n_ratings_per_user, fill=True)
+plt.xlim(0)
+plt.title("Number of Ratings Per User", fontsize=14)
+plt.xlabel("Number of Ratings per User")
+plt.ylabel("Density")
 
-get_content_based_recommendations('No Game No Life: Zero (2017)', 15)
+# Plot for number of ratings per movie
+plt.subplot(1, 2, 2)
+sns.kdeplot(n_ratings_per_movie, fill=True)
+plt.xlim(0)
+plt.title("Number of Ratings Per Movie", fontsize=14)
+plt.xlabel("Number of Ratings per Movie")
+plt.ylabel("Density")
 
-"""#### **DIMENSIONALITY REDUCTION**"""
+plt.tight_layout()
+plt.show()
 
-from sklearn.decomposition import TruncatedSVD
-
-svd = TruncatedSVD(n_components=20, n_iter=10)
-Q = svd.fit_transform(X.T)
-Q.shape
-
-movie_id = 1
-similar_movies = find_similar_movies(movie_id, Q.T, movie_mapper, movie_inv_mapper, metric='cosine', k=10)
-movie_title = movie_titles[movie_id]
-
-print(f"Because you watched {movie_title}:")
-for i in similar_movies:
-    print(movie_titles[i])
-
-"""The results above are the most similar movies to Toy Story using kNN on our “compressed” movie-factor matrix. We reduced the dimensions down to n_components=20. We can think of each component representing a latent feature such as movie genre.
-
-# **CONCLUSIONS**
-
-By leveraging the MovieLens dataset and implementing collaborative filtering techniques, this project aims to deliver a robust movie recommendation system. The insights gained from this system not only benefit users by providing personalized movie suggestions but also provide valuable learning in the field of recommendation systems.
-
-# **RECOMMENDATIONS**
-"""
-
-# Hybrid Recommendations with Input Functions
-
-def get_hybrid_recommendations(user_id, n=5):
-    # User-based CF predictions
-    user_based_predictions = algo_user_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
-
-    # Item-based CF predictions
-    item_based_predictions = algo_item_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
-
-    # Combine predictions from both models
-    hybrid_predictions = [(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, (ub_pred.est + ib_pred.est) / 2, ub_pred.details)
-                          for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions)]
-
-    # Sort predictions by estimated rating in descending order
-    hybrid_predictions.sort(key=lambda x: x[3], reverse=True)
-
-    # Select top n recommendations
-    top_recommendations = hybrid_predictions[:n]
-
-    # Extract movie titles for recommendations
-    recommendations = [movies[movies['movieId'] == pred[1]]['title'].values[0] for pred in top_recommendations]
-
-    return recommendations
-
-# Input function for user ID
-def get_user_id():
-    return int(input("Enter the user ID: "))
-
-# Input function for number of recommendations
-def get_num_recommendations():
-    return int(input("Enter the number of recommendations: "))
-
-# Get user ID and number of recommendations
-user_id = get_user_id()
-num_recommendations = get_num_recommendations()
-
-# Generate hybrid recommendations
-print("Hybrid Recommendations:")
-print(get_hybrid_recommendations(user_id, num_recommendations))
-
-"""# **REFERENCES**
-
-1.   MovieLens
-2.   Kaggle
-"""
+# """#**MODELLING**
+#
+# ## 1.Baseline model: recommend the most popular movies
+# """
+#
+# from sklearn.metrics import mean_squared_error
+# from math import sqrt
+#
+# # Baseline model: recommend the most popular movies
+# most_popular = ratings.groupby('movieId').size().sort_values(ascending=False).index[:5]
+#
+# print("Most Popular Movies:")
+# for movie_id in most_popular:
+#     movie_title = movies[movies['movieId'] == movie_id]['title'].values[0]
+#     print(f"Movie ID: {movie_id}, Title: {movie_title}")
+#
+# # Baseline RMSE (assuming using mean rating as prediction)
+# mean_rating = ratings['rating'].mean()
+# baseline_rmse = sqrt(mean_squared_error(ratings['rating'], np.full_like(ratings['rating'], mean_rating)))
+# print(f"Baseline RMSE: {baseline_rmse}")
+#
+# """## 2.Use KNNBasic for user-based collaborative filtering"""
+#
+# from sklearn.metrics.pairwise import cosine_similarity
+# from surprise import Dataset, Reader, KNNBasic
+# from surprise import accuracy
+# from surprise.model_selection import train_test_split as surprise_train_test_split
+# from collections import defaultdict
+#
+# # Load the data into Surprise format
+# reader = Reader(rating_scale=(1, 5))
+# data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
+#
+# # Split data into train and test sets
+# trainset, testset = surprise_train_test_split(data, test_size=0.25, random_state=42)
+#
+# # Use KNNBasic for user-based collaborative filtering
+# algo_user_based = KNNBasic(sim_options={'user_based': True})
+# algo_user_based.fit(trainset)
+# predictions_user_based = algo_user_based.test(testset)
+#
+# # Calculate RMSE
+# user_based_rmse = accuracy.rmse(predictions_user_based)
+#
+# # Helper Functions for Precision and Recall at k
+# def precision_at_k(predictions, k=10, threshold=3.5):
+#     '''Return precision at k metric for each user and averaged over all users.'''
+#     # First map the predictions to each user.
+#     user_est_true = defaultdict(list)
+#     for uid, _, true_r, est, _ in predictions:
+#         user_est_true[uid].append((est, true_r))
+#
+#     precisions = dict()
+#     for uid, user_ratings in user_est_true.items():
+#         # Sort user ratings by estimated value
+#         user_ratings.sort(key=lambda x: x[0], reverse=True)
+#         # Number of relevant items in top k
+#         n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
+#         # Precision at k: relevant items / k
+#         precisions[uid] = n_relevant / k
+#
+#     # Average precision at k over all users
+#     return sum(prec for prec in precisions.values()) / len(precisions)
+#
+# def recall_at_k(predictions, k=10, threshold=3.5):
+#     '''Return recall at k metric for each user and averaged over all users.'''
+#     # First map the predictions to each user.
+#     user_est_true = defaultdict(list)
+#     for uid, _, true_r, est, _ in predictions:
+#         user_est_true[uid].append((est, true_r))
+#
+#     recalls = dict()
+#     for uid, user_ratings in user_est_true.items():
+#         # Sort user ratings by estimated value
+#         user_ratings.sort(key=lambda x: x[0], reverse=True)
+#         # Number of relevant items in top k
+#         n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
+#         # Number of relevant items in the whole set
+#         n_possible = sum((true_r >= threshold) for (_, true_r) in user_ratings)
+#         # Recall at k: relevant items in top k / relevant items in the whole set
+#         recalls[uid] = n_relevant / n_possible if n_possible != 0 else 1
+#
+#     # Average recall at k over all users
+#     return sum(rec for rec in recalls.values()) / len(recalls)
+#
+# # Calculate other metrics (precision, recall, F1)
+# user_based_precision = precision_at_k(predictions_user_based, k=5, threshold=4)
+# user_based_recall = recall_at_k(predictions_user_based, k=5, threshold=4)
+# user_based_f1 = 2 * (user_based_precision * user_based_recall) / (user_based_precision + user_based_recall)
+#
+# print(f"User-Based CF RMSE: {user_based_rmse}")
+# print(f"User-Based CF Precision: {user_based_precision}")
+# print(f"User-Based CF Recall: {user_based_recall}")
+# print(f"User-Based CF F1: {user_based_f1}")
+#
+# """## 3.Use KNNBasic for item-based collaborative filtering
+#
+# """
+#
+# # Use KNNBasic for item-based collaborative filtering
+# algo_item_based = KNNBasic(sim_options={'user_based': False})
+# algo_item_based.fit(trainset)
+# predictions_item_based = algo_item_based.test(testset)
+#
+# # Calculate RMSE
+# item_based_rmse = accuracy.rmse(predictions_item_based)
+#
+# # Other metrics (precision, recall, F1)
+# item_based_precision = precision_at_k(predictions_item_based, k=5, threshold=4)
+# item_based_recall = recall_at_k(predictions_item_based, k=5, threshold=4)
+# item_based_f1 = 2 * (item_based_precision * item_based_recall) / (item_based_precision + item_based_recall)
+#
+# print(f"Item-Based CF RMSE: {item_based_rmse}")
+# print(f"Item-Based CF Precision: {item_based_precision}")
+# print(f"Item-Based CF Recall: {item_based_recall}")
+# print(f"Item-Based CF F1: {item_based_f1}")
+#
+# """## 4.Use SVD for matrix factorization
+#
+# """
+#
+# from surprise import SVD
+#
+# # Use SVD for matrix factorization
+# algo_svd = SVD()
+# algo_svd.fit(trainset)
+# predictions_svd = algo_svd.test(testset)
+#
+# # Calculate RMSE
+# svd_rmse = accuracy.rmse(predictions_svd)
+#
+# # Other metrics (precision, recall, F1)
+# svd_precision = precision_at_k(predictions_svd, k=5, threshold=4)
+# svd_recall = recall_at_k(predictions_svd, k=5, threshold=4)
+# svd_f1 = 2 * (svd_precision * svd_recall) / (svd_precision + svd_recall)
+#
+# print(f"SVD RMSE: {svd_rmse}")
+# print(f"SVD Precision: {svd_precision}")
+# print(f"SVD Recall: {svd_recall}")
+# print(f"SVD F1: {svd_f1}")
+#
+# """## 5.Hybrid Model"""
+#
+# # Assume we have user-based and item-based CF predictions stored
+# user_based_predictions = algo_user_based.test(testset)
+# item_based_predictions = algo_item_based.test(testset)
+#
+# # Combine the predictions (simple average)
+# hybrid_predictions = []
+# for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions):
+#     hybrid_est = (ub_pred.est + ib_pred.est) / 2
+#     hybrid_predictions.append(surprise.Prediction(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, hybrid_est, ub_pred.details))
+#
+# # Calculate RMSE
+# hybrid_rmse = accuracy.rmse(hybrid_predictions)
+#
+# # Other metrics (precision, recall, F1)
+# hybrid_precision = precision_at_k(hybrid_predictions, k=5, threshold=4)
+# hybrid_recall = recall_at_k(hybrid_predictions, k=5, threshold=4)
+# hybrid_f1 = 2 * (hybrid_precision * hybrid_recall) / (hybrid_precision + hybrid_recall)
+#
+# print(f"Hybrid Model RMSE: {hybrid_rmse}")
+# print(f"Hybrid Model Precision: {hybrid_precision}")
+# print(f"Hybrid Model Recall: {hybrid_recall}")
+# print(f"Hybrid Model F1: {hybrid_f1}")
+#
+# # Example values (replace with your actual computed metrics)
+# metrics = ['RMSE', 'Precision', 'Recall', 'F1 Score']
+# values = [0.8894, 0.6925, 0.4322, 0.5322]  # Example values, replace with your actual computed metrics
+#
+# # Plotting
+# plt.figure(figsize=(6, 4))
+# bars = plt.bar(metrics, values, color=['blue', 'green', 'orange', 'red'])
+#
+# # Adding text annotations
+# for bar in bars:
+#     yval = bar.get_height()
+#     plt.text(bar.get_x() + bar.get_width()/2, yval + 0.01, round(yval, 4), ha='center', va='bottom')
+#
+# # Adding labels and title
+# plt.title('Performance Metrics of Hybrid Model')
+# plt.xlabel('Metrics')
+# plt.ylabel('Score')
+#
+# # Display the plot
+# plt.show()
+#
+# """#**MODEL EVALUATION**
+#
+# **# 1.Most Popular Movies (Baseline)**:
+#
+# RMSE: 1.0425  
+# on average, the predictions are off by around 1.0425 units (which typically corresponds to the rating scale used.
+#
+#
+# **# 2.User-Based Collaborative Filtering:**
+#
+#
+# RMSE: 0.9562
+#
+# Precision: 0.6895
+#
+# Recall: 0.4325
+#
+# F1 Score: 0.5316
+#
+# predictions are more accurate than the baseline, reducing the average error in predictions.
+# successfully recommends relevant movies to users with a good balance between precision and recall.
+#
+# **# 3.Item-Based Collaborative Filtering:**
+#
+# RMSE: 0.9162
+#
+# Precision: 0.6574
+#
+# Recall: 0.4176
+#
+# F1 Score: 0.5108
+#
+# suggests further improvement in prediction accuracy compared to user-based CF and the baseline.
+# performs well but
+#
+#
+# **#4.SVD (Matrix Factorization):**
+#
+# RMSE: 0.8828
+#
+# Precision: 0.6911
+#
+# Recall: 0.4282
+#
+# F1 Score: 0.5288
+#
+# better accuracy than both CF methods and the baseline, indicating it can make more precise predictions.
+# competitive performance with high precision and balanced recall, indicating effective recommendations.
+#
+#
+#
+# **#5.Hybrid Model (Combination of CF and Content-Based)**:
+#
+# RMSE: 0.8894
+#
+# Precision: 0.6925
+#
+# Recall: 0.4322
+#
+# F1 Score: 0.5322
+#
+# strong performance, slightly below SVD but still significantly better than baseline and CF methods.
+# performs similarly to SVD, demonstrating robustness in recommending relevant movies with high precision and recall.
+#
+# ### **COLDSTART PROBLEM**
+# """
+#
+# n_movies = movies['movieId'].nunique()
+# print(f"There are {n_movies} unique movies in our movies dataset.")
+#
+# genres = set(g for G in movies['genres'] for g in G)
+#
+# for g in genres:
+#     movies[g] = movies.genres.transform(lambda x: int(g in x))
+#
+# movie_genres = movies.drop(columns=['movieId', 'title','genres'])
+#
+# movie_genres.head()
+#
+# from sklearn.metrics.pairwise import cosine_similarity
+#
+# cosine_sim = cosine_similarity(movie_genres, movie_genres)
+# print(f"Dimensions of our genres cosine similarity matrix: {cosine_sim.shape}")
+#
+# """### **ITEM-ITEM RECOMMENDER**"""
+#
+# from sklearn.neighbors import NearestNeighbors
+#
+# def find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, k, metric='cosine'):
+#     X = X.T
+#     neighbour_ids = []
+#
+#     movie_ind = movie_mapper[movie_id]
+#     movie_vec = X[movie_ind]
+#     if isinstance(movie_vec, (np.ndarray)):
+#         movie_vec = movie_vec.reshape(1,-1)
+#     # use k+1 since kNN output includes the movieId of interest
+#     kNN = NearestNeighbors(n_neighbors=k+1, algorithm="brute", metric=metric)
+#     kNN.fit(X)
+#     neighbour = kNN.kneighbors(movie_vec, return_distance=False)
+#     for i in range(0,k):
+#         n = neighbour.item(i)
+#         neighbour_ids.append(movie_inv_mapper[n])
+#     neighbour_ids.pop(0)
+#     return neighbour_ids
+#
+# """find_similar_movies() takes in a movieId and X matrix mapper, and outputs a list of movies that are similar to the movieId of interest."""
+#
+# similar_movies = find_similar_movies(1, X, movie_mapper, movie_inv_mapper, k=10)
+# similar_movies
+#
+# """find_similar_movies() returns a list of movieId's that are most similar to your movie of interest.
+#
+# converting movie id to titles for movie it to tilte for title title recommendations
+# """
+#
+# movie_titles = dict(zip(movies['movieId'], movies['title']))
+#
+# movie_id = 1
+#
+# similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='cosine', k=20)
+# movie_title = movie_titles[movie_id]
+#
+# print(f"Because you watched {movie_title}:")
+# for i in similar_movies:
+#     print(movie_titles[i])
+#
+# """this shows the 20 movies that are most similar to Toy Story (1995) movie. this only uses user ratings"""
+#
+# #using eucledian metric
+# movie_id = 2
+#
+# similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='euclidean', k=20)
+# movie_title = movie_titles[movie_id]
+#
+# print(f"Because you watched {movie_title}:")
+# for i in similar_movies:
+#     print(movie_titles[i])
+#
+# """### **MOVIE FINDER FROM KNEAREST ITEM ITEM RECOMMENDER**
+#
+#
+# """
+#
+# # pip install fuzzywuzzy
+#
+# # pip install thefuzz
+#
+# from fuzzywuzzy import process
+#
+# #for similarity incase of spelling or ommisions to give most similar title
+# def movie_finder(title):
+#     all_titles = movies['title'].tolist()
+#     closest_match = process.extractOne(title,all_titles)
+#     return closest_match[0]
+#
+# title = movie_finder('ForRet Gmp')
+# title
+#
+# """**FUZZY WUZZY WORKS**
+#
+# movie index mapper which maps a movie title to the index that it represents in our matrix.
+# """
+#
+# movie_idx = dict(zip(movies['title'], list(movies.index)))
+# idx = movie_idx[title]
+# print(f"Movie index for 'Forrest Gump (1994)': {idx}")
+#
+# """Using this handy movie_idx dictionary, we know that Jumanji is represented by index 1 in our matrix. Let's get the top 10 most similar movies to Jumanji."""
+#
+# n_recommendations=10
+# sim_scores = list(enumerate(cosine_sim[idx]))
+# sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+# sim_scores = sim_scores[1:(n_recommendations+1)]
+# similar_movies = [i[0] for i in sim_scores]
+#
+# print(f"Because you watched {title}:")
+# movies['title'].iloc[similar_movies]
+#
+# print(f"Because you watched {title}:")
+# movies['title'].iloc[similar_movies]
+#
+# """these recommendationms are similar to forest gump
+#
+# to get recommendations for other films
+# """
+#
+# def get_content_based_recommendations(title_string, n_recommendations=10):
+#     title = movie_finder(title_string)
+#     idx = movie_idx[title]
+#     sim_scores = list(enumerate(cosine_sim[idx]))
+#     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+#     sim_scores = sim_scores[1:(n_recommendations+1)]
+#     similar_movies = [i[0] for i in sim_scores]
+#     print(f"Because you watched {title}:")
+#     print(movies['title'].iloc[similar_movies])
+#
+# get_content_based_recommendations('No Game No Life: Zero (2017)', 15)
+#
+# """#### **DIMENSIONALITY REDUCTION**"""
+#
+# from sklearn.decomposition import TruncatedSVD
+#
+# svd = TruncatedSVD(n_components=20, n_iter=10)
+# Q = svd.fit_transform(X.T)
+# Q.shape
+#
+# movie_id = 1
+# similar_movies = find_similar_movies(movie_id, Q.T, movie_mapper, movie_inv_mapper, metric='cosine', k=10)
+# movie_title = movie_titles[movie_id]
+#
+# print(f"Because you watched {movie_title}:")
+# for i in similar_movies:
+#     print(movie_titles[i])
+#
+# """The results above are the most similar movies to Toy Story using kNN on our “compressed” movie-factor matrix. We reduced the dimensions down to n_components=20. We can think of each component representing a latent feature such as movie genre.
+#
+# # **CONCLUSIONS**
+#
+# By leveraging the MovieLens dataset and implementing collaborative filtering techniques, this project aims to deliver a robust movie recommendation system. The insights gained from this system not only benefit users by providing personalized movie suggestions but also provide valuable learning in the field of recommendation systems.
+#
+# # **RECOMMENDATIONS**
+# """
+#
+# # Hybrid Recommendations with Input Functions
+#
+# def get_hybrid_recommendations(user_id, n=5):
+#     # User-based CF predictions
+#     user_based_predictions = algo_user_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
+#
+#     # Item-based CF predictions
+#     item_based_predictions = algo_item_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
+#
+#     # Combine predictions from both models
+#     hybrid_predictions = [(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, (ub_pred.est + ib_pred.est) / 2, ub_pred.details)
+#                           for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions)]
+#
+#     # Sort predictions by estimated rating in descending order
+#     hybrid_predictions.sort(key=lambda x: x[3], reverse=True)
+#
+#     # Select top n recommendations
+#     top_recommendations = hybrid_predictions[:n]
+#
+#     # Extract movie titles for recommendations
+#     recommendations = [movies[movies['movieId'] == pred[1]]['title'].values[0] for pred in top_recommendations]
+#
+#     return recommendations
+#
+# # Input function for user ID
+# def get_user_id():
+#     return int(input("Enter the user ID: "))
+#
+# # Input function for number of recommendations
+# def get_num_recommendations():
+#     return int(input("Enter the number of recommendations: "))
+#
+# # Get user ID and number of recommendations
+# user_id = get_user_id()
+# num_recommendations = get_num_recommendations()
+#
+# # Generate hybrid recommendations
+# print("Hybrid Recommendations:")
+# print(get_hybrid_recommendations(user_id, num_recommendations))
+#
+# """# **REFERENCES**
+#
+# 1.   MovieLens
+# 2.   Kaggle
+# """
