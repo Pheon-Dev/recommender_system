@@ -169,3 +169,66 @@ data.duplicated().sum()
 
 """there are no duplicates"""
 
+#Define a comprehensive list of potential placeholder values
+common_placeholders = ["", "na", "n/a", "nan", "none", "null", "-", "--", "?", "??", "unknown", "missing", "void"]
+# Loop through each column and check for potential placeholders
+found_placeholder = False
+for column in data.columns:
+    unique_values = data[column].unique()
+    for value in unique_values:
+        if pd.isna(value) or (isinstance(value, str) and value.strip().lower() in common_placeholders):
+            count = (data[column] == value).sum()
+            print(f"Column '{column}': Found {count} occurrences of potential placeholder '{value}'")
+            found_placeholder = True
+if not found_placeholder:
+    print("No potential placeholders found in the DataFrame.")
+
+data.info()
+
+"""### COVERSIONS OF DATATYPES"""
+
+# Convert data types
+
+data['tmdbId'] = data['tmdbId'].astype(int)
+data['userId_x'] = data['userId_x'].astype(int)
+data['rating'] = data['rating'].astype(float)
+data['title'] = data['title'].astype(str)
+data['genres'] = data['genres'].astype(str)
+data['userId_y'] = data['userId_y'].astype(int)
+data['tag'] = data['tag'].astype(str)
+
+#converting timestamp from unix timestamp to datetime
+import datetime
+data['timestamp_rating'] = data['timestamp_x'].apply(lambda x: datetime.datetime.fromtimestamp(x))
+data['timestamp_tag'] = data['timestamp_y'].apply(lambda x: datetime.datetime.fromtimestamp(x))
+
+"""we can use timestamp to come up with a features"""
+
+data.info()
+
+"""#### dropping columns"""
+
+data = data.drop(['tmdbId'], axis = 1)
+
+"""movieId: Essential for identifying movies. Keep.
+imdbId: May not be necessary unless you are using IMDb data specifically. Consider dropping if not used.
+tmdbId: Same as imdbId. Consider dropping if not used.
+userId_x: Movie ID is the key identifier, drop
+rating: Essential for a recommendation system. Keep.
+timestamp_x: Timestamp of the rating. Consider keeping if you plan to use time-based analysis.
+title: Useful for displaying recommendations but not for the core algorithm. Consider dropping if not used in the model.
+genres: Useful for content-based filtering. Keep.
+userId_y: Drop.
+tag: Useful for content-based filtering. Keep.
+timestamp_y: Timestamp of the taging. Consider keeping if you plan to use time-based analysis.
+"""
+
+data.info()
+
+data
+
+"""# **STATISTICAL ANALYSIS**"""
+
+print(data.describe())
+print(data.describe(include=['object']))
+
