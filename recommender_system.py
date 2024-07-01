@@ -410,18 +410,18 @@ plt.show()
 #### 7.**WordCloud of Genres**
 """
 
-#WordCloud of genres
-from wordcloud import WordCloud
-
-all_genres = ' '.join(movies['genres'].dropna().astype(str))
-
-wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_genres)
-
-plt.figure(figsize=(10, 6))
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis('off')
-plt.title('Word Cloud of Genres')
-plt.show()
+# #WordCloud of genres
+# from wordcloud import WordCloud
+#
+# all_genres = ' '.join(movies['genres'].dropna().astype(str))
+#
+# wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_genres)
+#
+# plt.figure(figsize=(10, 6))
+# plt.imshow(wordcloud, interpolation='bilinear')
+# plt.axis('off')
+# plt.title('Word Cloud of Genres')
+# plt.show()
 
 """### **Observations**: Comedy,Drama,Action,Adventure,Sci-Fi and Romance are the most popular genres.
 
@@ -442,66 +442,66 @@ plt.show()
 #### 9.**WordCloud of Movie Tags**
 """
 
-# #World cloud of movie tags
-# from wordcloud import WordCloud
-#
-# all_tags = ' '.join(tags['tag'].dropna())
-# wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_tags)
-#
-# plt.figure(figsize=(10, 6))
-# plt.imshow(wordcloud, interpolation='bilinear')
-# plt.axis('off')
-# plt.title('Word Cloud of Movie Tags')
-# plt.show()
-#
-# """### **Observations**: Most used Tag is Netflix queue.
-#
-# #### 10.**Propotions of Diffrent Genres**
-# """
-#
-# #Propotions of Different Genres
-# genre_counts = movies['genres'].str.split('|').explode().value_counts(15)
-#
-# plt.figure(figsize=(8, 8))
-# plt.pie(genre_counts, labels=genre_counts.index, autopct='%1.1f%%', startangle=140)
-# plt.title('Proportion of Different Genres')
-# plt.axis('equal')
-# plt.show()
-#
-# """### **Observations**: Drama has the highest propotion of 19.7 percent
-#
-# #### 11.**Most Frequent Movie Titles**
-# """
-#
-# # Plotting the top 20 most frequent movie titles in descending order
-# plt.figure(figsize=(10, 6))
-# data['title'].value_counts().head(20).sort_values(ascending=True).plot(kind='barh')
-# plt.xlabel('Count')
-# plt.ylabel('Title')
-# plt.title('Top 20 Most Frequent Movie Titles')
-# plt.show()
-#
-# """### **Observations**: Most common Title is Pulp Friction.
-#
-# #### 11.**Number of Movies per Genre**
-# """
-#
-# #Movies per genre
-# genres = movies['genres'].str.split('|').explode().value_counts()
-# palette = sns.color_palette("husl", len(genres))
-#
-# plt.figure(figsize=(10, 6))
-# genres.plot(kind='bar', color=palette)
-# plt.title('Number of Movies per Genre')
-# plt.xlabel('Genre')
-# plt.ylabel('Number of Movies')
-# plt.show()
-#
-# """### **Observations**: Most Genre counts are Drama.
-#
-# #### 12.**User Activity Scatter Plot**
-# """
-#
+#World cloud of movie tags
+from wordcloud import WordCloud
+
+all_tags = ' '.join(tags['tag'].dropna())
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_tags)
+
+plt.figure(figsize=(10, 6))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Word Cloud of Movie Tags')
+plt.show()
+
+"""### **Observations**: Most used Tag is Netflix queue.
+
+#### 10.**Propotions of Diffrent Genres**
+"""
+
+#Propotions of Different Genres
+genre_counts = movies['genres'].str.split('|').explode().value_counts(15)
+
+plt.figure(figsize=(8, 8))
+plt.pie(genre_counts, labels=genre_counts.index, autopct='%1.1f%%', startangle=140)
+plt.title('Proportion of Different Genres')
+plt.axis('equal')
+plt.show()
+
+"""### **Observations**: Drama has the highest propotion of 19.7 percent
+
+#### 11.**Most Frequent Movie Titles**
+"""
+
+# Plotting the top 20 most frequent movie titles in descending order
+plt.figure(figsize=(10, 6))
+data['title'].value_counts().head(20).sort_values(ascending=True).plot(kind='barh')
+plt.xlabel('Count')
+plt.ylabel('Title')
+plt.title('Top 20 Most Frequent Movie Titles')
+plt.show()
+
+"""### **Observations**: Most common Title is Pulp Friction.
+
+#### 11.**Number of Movies per Genre**
+"""
+
+#Movies per genre
+genres = movies['genres'].str.split('|').explode().value_counts()
+palette = sns.color_palette("husl", len(genres))
+
+plt.figure(figsize=(10, 6))
+genres.plot(kind='bar', color=palette)
+plt.title('Number of Movies per Genre')
+plt.xlabel('Genre')
+plt.ylabel('Number of Movies')
+plt.show()
+
+"""### **Observations**: Most Genre counts are Drama.
+
+#### 12.**User Activity Scatter Plot**
+"""
+
 # # Scatter plot of user activity
 #
 # # Set a threshold for user activity differentiation
@@ -787,459 +787,459 @@ plt.show()
 # plt.tight_layout()
 # plt.show()
 #
-# """#**MODELLING**
-#
-# ## 1.Baseline model: recommend the most popular movies
-# """
-#
-# from sklearn.metrics import mean_squared_error
-# from math import sqrt
-#
-# # Baseline model: recommend the most popular movies
-# most_popular = ratings.groupby('movieId').size().sort_values(ascending=False).index[:5]
-#
-# print("Most Popular Movies:")
-# for movie_id in most_popular:
-#     movie_title = movies[movies['movieId'] == movie_id]['title'].values[0]
-#     print(f"Movie ID: {movie_id}, Title: {movie_title}")
-#
-# # Baseline RMSE (assuming using mean rating as prediction)
-# mean_rating = ratings['rating'].mean()
-# baseline_rmse = sqrt(mean_squared_error(ratings['rating'], np.full_like(ratings['rating'], mean_rating)))
-# print(f"Baseline RMSE: {baseline_rmse}")
-#
-# """## 2.Use KNNBasic for user-based collaborative filtering"""
-#
-# from sklearn.metrics.pairwise import cosine_similarity
-# from surprise import Dataset, Reader, KNNBasic
-# from surprise import accuracy
-# from surprise.model_selection import train_test_split as surprise_train_test_split
-# from collections import defaultdict
-#
-# # Load the data into Surprise format
-# reader = Reader(rating_scale=(1, 5))
-# data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
-#
-# # Split data into train and test sets
-# trainset, testset = surprise_train_test_split(data, test_size=0.25, random_state=42)
-#
-# # Use KNNBasic for user-based collaborative filtering
-# algo_user_based = KNNBasic(sim_options={'user_based': True})
-# algo_user_based.fit(trainset)
-# predictions_user_based = algo_user_based.test(testset)
-#
-# # Calculate RMSE
-# user_based_rmse = accuracy.rmse(predictions_user_based)
-#
-# # Helper Functions for Precision and Recall at k
-# def precision_at_k(predictions, k=10, threshold=3.5):
-#     '''Return precision at k metric for each user and averaged over all users.'''
-#     # First map the predictions to each user.
-#     user_est_true = defaultdict(list)
-#     for uid, _, true_r, est, _ in predictions:
-#         user_est_true[uid].append((est, true_r))
-#
-#     precisions = dict()
-#     for uid, user_ratings in user_est_true.items():
-#         # Sort user ratings by estimated value
-#         user_ratings.sort(key=lambda x: x[0], reverse=True)
-#         # Number of relevant items in top k
-#         n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
-#         # Precision at k: relevant items / k
-#         precisions[uid] = n_relevant / k
-#
-#     # Average precision at k over all users
-#     return sum(prec for prec in precisions.values()) / len(precisions)
-#
-# def recall_at_k(predictions, k=10, threshold=3.5):
-#     '''Return recall at k metric for each user and averaged over all users.'''
-#     # First map the predictions to each user.
-#     user_est_true = defaultdict(list)
-#     for uid, _, true_r, est, _ in predictions:
-#         user_est_true[uid].append((est, true_r))
-#
-#     recalls = dict()
-#     for uid, user_ratings in user_est_true.items():
-#         # Sort user ratings by estimated value
-#         user_ratings.sort(key=lambda x: x[0], reverse=True)
-#         # Number of relevant items in top k
-#         n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
-#         # Number of relevant items in the whole set
-#         n_possible = sum((true_r >= threshold) for (_, true_r) in user_ratings)
-#         # Recall at k: relevant items in top k / relevant items in the whole set
-#         recalls[uid] = n_relevant / n_possible if n_possible != 0 else 1
-#
-#     # Average recall at k over all users
-#     return sum(rec for rec in recalls.values()) / len(recalls)
-#
-# # Calculate other metrics (precision, recall, F1)
-# user_based_precision = precision_at_k(predictions_user_based, k=5, threshold=4)
-# user_based_recall = recall_at_k(predictions_user_based, k=5, threshold=4)
-# user_based_f1 = 2 * (user_based_precision * user_based_recall) / (user_based_precision + user_based_recall)
-#
-# print(f"User-Based CF RMSE: {user_based_rmse}")
-# print(f"User-Based CF Precision: {user_based_precision}")
-# print(f"User-Based CF Recall: {user_based_recall}")
-# print(f"User-Based CF F1: {user_based_f1}")
-#
-# """## 3.Use KNNBasic for item-based collaborative filtering
-#
-# """
-#
-# # Use KNNBasic for item-based collaborative filtering
-# algo_item_based = KNNBasic(sim_options={'user_based': False})
-# algo_item_based.fit(trainset)
-# predictions_item_based = algo_item_based.test(testset)
-#
-# # Calculate RMSE
-# item_based_rmse = accuracy.rmse(predictions_item_based)
-#
-# # Other metrics (precision, recall, F1)
-# item_based_precision = precision_at_k(predictions_item_based, k=5, threshold=4)
-# item_based_recall = recall_at_k(predictions_item_based, k=5, threshold=4)
-# item_based_f1 = 2 * (item_based_precision * item_based_recall) / (item_based_precision + item_based_recall)
-#
-# print(f"Item-Based CF RMSE: {item_based_rmse}")
-# print(f"Item-Based CF Precision: {item_based_precision}")
-# print(f"Item-Based CF Recall: {item_based_recall}")
-# print(f"Item-Based CF F1: {item_based_f1}")
-#
-# """## 4.Use SVD for matrix factorization
-#
-# """
-#
-# from surprise import SVD
-#
-# # Use SVD for matrix factorization
-# algo_svd = SVD()
-# algo_svd.fit(trainset)
-# predictions_svd = algo_svd.test(testset)
-#
-# # Calculate RMSE
-# svd_rmse = accuracy.rmse(predictions_svd)
-#
-# # Other metrics (precision, recall, F1)
-# svd_precision = precision_at_k(predictions_svd, k=5, threshold=4)
-# svd_recall = recall_at_k(predictions_svd, k=5, threshold=4)
-# svd_f1 = 2 * (svd_precision * svd_recall) / (svd_precision + svd_recall)
-#
-# print(f"SVD RMSE: {svd_rmse}")
-# print(f"SVD Precision: {svd_precision}")
-# print(f"SVD Recall: {svd_recall}")
-# print(f"SVD F1: {svd_f1}")
-#
-# """## 5.Hybrid Model"""
-#
-# # Assume we have user-based and item-based CF predictions stored
-# user_based_predictions = algo_user_based.test(testset)
-# item_based_predictions = algo_item_based.test(testset)
-#
-# # Combine the predictions (simple average)
-# hybrid_predictions = []
-# for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions):
-#     hybrid_est = (ub_pred.est + ib_pred.est) / 2
-#     hybrid_predictions.append(surprise.Prediction(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, hybrid_est, ub_pred.details))
-#
-# # Calculate RMSE
-# hybrid_rmse = accuracy.rmse(hybrid_predictions)
-#
-# # Other metrics (precision, recall, F1)
-# hybrid_precision = precision_at_k(hybrid_predictions, k=5, threshold=4)
-# hybrid_recall = recall_at_k(hybrid_predictions, k=5, threshold=4)
-# hybrid_f1 = 2 * (hybrid_precision * hybrid_recall) / (hybrid_precision + hybrid_recall)
-#
-# print(f"Hybrid Model RMSE: {hybrid_rmse}")
-# print(f"Hybrid Model Precision: {hybrid_precision}")
-# print(f"Hybrid Model Recall: {hybrid_recall}")
-# print(f"Hybrid Model F1: {hybrid_f1}")
-#
-# # Example values (replace with your actual computed metrics)
-# metrics = ['RMSE', 'Precision', 'Recall', 'F1 Score']
-# values = [0.8894, 0.6925, 0.4322, 0.5322]  # Example values, replace with your actual computed metrics
-#
-# # Plotting
-# plt.figure(figsize=(6, 4))
-# bars = plt.bar(metrics, values, color=['blue', 'green', 'orange', 'red'])
-#
-# # Adding text annotations
-# for bar in bars:
-#     yval = bar.get_height()
-#     plt.text(bar.get_x() + bar.get_width()/2, yval + 0.01, round(yval, 4), ha='center', va='bottom')
-#
-# # Adding labels and title
-# plt.title('Performance Metrics of Hybrid Model')
-# plt.xlabel('Metrics')
-# plt.ylabel('Score')
-#
-# # Display the plot
-# plt.show()
-#
-# """#**MODEL EVALUATION**
-#
-# **# 1.Most Popular Movies (Baseline)**:
-#
-# RMSE: 1.0425  
-# on average, the predictions are off by around 1.0425 units (which typically corresponds to the rating scale used.
-#
-#
-# **# 2.User-Based Collaborative Filtering:**
-#
-#
-# RMSE: 0.9562
-#
-# Precision: 0.6895
-#
-# Recall: 0.4325
-#
-# F1 Score: 0.5316
-#
-# predictions are more accurate than the baseline, reducing the average error in predictions.
-# successfully recommends relevant movies to users with a good balance between precision and recall.
-#
-# **# 3.Item-Based Collaborative Filtering:**
-#
-# RMSE: 0.9162
-#
-# Precision: 0.6574
-#
-# Recall: 0.4176
-#
-# F1 Score: 0.5108
-#
-# suggests further improvement in prediction accuracy compared to user-based CF and the baseline.
-# performs well but
-#
-#
-# **#4.SVD (Matrix Factorization):**
-#
-# RMSE: 0.8828
-#
-# Precision: 0.6911
-#
-# Recall: 0.4282
-#
-# F1 Score: 0.5288
-#
-# better accuracy than both CF methods and the baseline, indicating it can make more precise predictions.
-# competitive performance with high precision and balanced recall, indicating effective recommendations.
-#
-#
-#
-# **#5.Hybrid Model (Combination of CF and Content-Based)**:
-#
-# RMSE: 0.8894
-#
-# Precision: 0.6925
-#
-# Recall: 0.4322
-#
-# F1 Score: 0.5322
-#
-# strong performance, slightly below SVD but still significantly better than baseline and CF methods.
-# performs similarly to SVD, demonstrating robustness in recommending relevant movies with high precision and recall.
-#
-# ### **COLDSTART PROBLEM**
-# """
-#
-# n_movies = movies['movieId'].nunique()
-# print(f"There are {n_movies} unique movies in our movies dataset.")
-#
-# genres = set(g for G in movies['genres'] for g in G)
-#
-# for g in genres:
-#     movies[g] = movies.genres.transform(lambda x: int(g in x))
-#
-# movie_genres = movies.drop(columns=['movieId', 'title','genres'])
-#
-# movie_genres.head()
-#
-# from sklearn.metrics.pairwise import cosine_similarity
-#
-# cosine_sim = cosine_similarity(movie_genres, movie_genres)
-# print(f"Dimensions of our genres cosine similarity matrix: {cosine_sim.shape}")
-#
-# """### **ITEM-ITEM RECOMMENDER**"""
-#
-# from sklearn.neighbors import NearestNeighbors
-#
-# def find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, k, metric='cosine'):
-#     X = X.T
-#     neighbour_ids = []
-#
-#     movie_ind = movie_mapper[movie_id]
-#     movie_vec = X[movie_ind]
-#     if isinstance(movie_vec, (np.ndarray)):
-#         movie_vec = movie_vec.reshape(1,-1)
-#     # use k+1 since kNN output includes the movieId of interest
-#     kNN = NearestNeighbors(n_neighbors=k+1, algorithm="brute", metric=metric)
-#     kNN.fit(X)
-#     neighbour = kNN.kneighbors(movie_vec, return_distance=False)
-#     for i in range(0,k):
-#         n = neighbour.item(i)
-#         neighbour_ids.append(movie_inv_mapper[n])
-#     neighbour_ids.pop(0)
-#     return neighbour_ids
-#
-# """find_similar_movies() takes in a movieId and X matrix mapper, and outputs a list of movies that are similar to the movieId of interest."""
-#
-# similar_movies = find_similar_movies(1, X, movie_mapper, movie_inv_mapper, k=10)
-# similar_movies
-#
-# """find_similar_movies() returns a list of movieId's that are most similar to your movie of interest.
-#
-# converting movie id to titles for movie it to tilte for title title recommendations
-# """
-#
-# movie_titles = dict(zip(movies['movieId'], movies['title']))
-#
-# movie_id = 1
-#
-# similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='cosine', k=20)
-# movie_title = movie_titles[movie_id]
-#
-# print(f"Because you watched {movie_title}:")
-# for i in similar_movies:
-#     print(movie_titles[i])
-#
-# """this shows the 20 movies that are most similar to Toy Story (1995) movie. this only uses user ratings"""
-#
-# #using eucledian metric
-# movie_id = 2
-#
-# similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='euclidean', k=20)
-# movie_title = movie_titles[movie_id]
-#
-# print(f"Because you watched {movie_title}:")
-# for i in similar_movies:
-#     print(movie_titles[i])
-#
-# """### **MOVIE FINDER FROM KNEAREST ITEM ITEM RECOMMENDER**
-#
-#
-# """
-#
-# # pip install fuzzywuzzy
-#
-# # pip install thefuzz
-#
-# from fuzzywuzzy import process
-#
-# #for similarity incase of spelling or ommisions to give most similar title
-# def movie_finder(title):
-#     all_titles = movies['title'].tolist()
-#     closest_match = process.extractOne(title,all_titles)
-#     return closest_match[0]
-#
-# title = movie_finder('ForRet Gmp')
-# title
-#
-# """**FUZZY WUZZY WORKS**
-#
-# movie index mapper which maps a movie title to the index that it represents in our matrix.
-# """
-#
-# movie_idx = dict(zip(movies['title'], list(movies.index)))
-# idx = movie_idx[title]
-# print(f"Movie index for 'Forrest Gump (1994)': {idx}")
-#
-# """Using this handy movie_idx dictionary, we know that Jumanji is represented by index 1 in our matrix. Let's get the top 10 most similar movies to Jumanji."""
-#
-# n_recommendations=10
-# sim_scores = list(enumerate(cosine_sim[idx]))
-# sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-# sim_scores = sim_scores[1:(n_recommendations+1)]
-# similar_movies = [i[0] for i in sim_scores]
-#
-# print(f"Because you watched {title}:")
-# movies['title'].iloc[similar_movies]
-#
-# print(f"Because you watched {title}:")
-# movies['title'].iloc[similar_movies]
-#
-# """these recommendationms are similar to forest gump
-#
-# to get recommendations for other films
-# """
-#
-# def get_content_based_recommendations(title_string, n_recommendations=10):
-#     title = movie_finder(title_string)
-#     idx = movie_idx[title]
-#     sim_scores = list(enumerate(cosine_sim[idx]))
-#     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-#     sim_scores = sim_scores[1:(n_recommendations+1)]
-#     similar_movies = [i[0] for i in sim_scores]
-#     print(f"Because you watched {title}:")
-#     print(movies['title'].iloc[similar_movies])
-#
-# get_content_based_recommendations('No Game No Life: Zero (2017)', 15)
-#
-# """#### **DIMENSIONALITY REDUCTION**"""
-#
-# from sklearn.decomposition import TruncatedSVD
-#
-# svd = TruncatedSVD(n_components=20, n_iter=10)
-# Q = svd.fit_transform(X.T)
-# Q.shape
-#
-# movie_id = 1
-# similar_movies = find_similar_movies(movie_id, Q.T, movie_mapper, movie_inv_mapper, metric='cosine', k=10)
-# movie_title = movie_titles[movie_id]
-#
-# print(f"Because you watched {movie_title}:")
-# for i in similar_movies:
-#     print(movie_titles[i])
-#
-# """The results above are the most similar movies to Toy Story using kNN on our “compressed” movie-factor matrix. We reduced the dimensions down to n_components=20. We can think of each component representing a latent feature such as movie genre.
-#
-# # **CONCLUSIONS**
-#
-# By leveraging the MovieLens dataset and implementing collaborative filtering techniques, this project aims to deliver a robust movie recommendation system. The insights gained from this system not only benefit users by providing personalized movie suggestions but also provide valuable learning in the field of recommendation systems.
-#
-# # **RECOMMENDATIONS**
-# """
-#
-# # Hybrid Recommendations with Input Functions
-#
-# def get_hybrid_recommendations(user_id, n=5):
-#     # User-based CF predictions
-#     user_based_predictions = algo_user_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
-#
-#     # Item-based CF predictions
-#     item_based_predictions = algo_item_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
-#
-#     # Combine predictions from both models
-#     hybrid_predictions = [(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, (ub_pred.est + ib_pred.est) / 2, ub_pred.details)
-#                           for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions)]
-#
-#     # Sort predictions by estimated rating in descending order
-#     hybrid_predictions.sort(key=lambda x: x[3], reverse=True)
-#
-#     # Select top n recommendations
-#     top_recommendations = hybrid_predictions[:n]
-#
-#     # Extract movie titles for recommendations
-#     recommendations = [movies[movies['movieId'] == pred[1]]['title'].values[0] for pred in top_recommendations]
-#
-#     return recommendations
-#
-# # Input function for user ID
-# def get_user_id():
-#     return int(input("Enter the user ID: "))
-#
-# # Input function for number of recommendations
-# def get_num_recommendations():
-#     return int(input("Enter the number of recommendations: "))
-#
-# # Get user ID and number of recommendations
-# user_id = get_user_id()
-# num_recommendations = get_num_recommendations()
-#
-# # Generate hybrid recommendations
-# print("Hybrid Recommendations:")
-# print(get_hybrid_recommendations(user_id, num_recommendations))
-#
-# """# **REFERENCES**
-#
-# 1.   MovieLens
-# 2.   Kaggle
-# """
+"""#**MODELLING**
+
+## 1.Baseline model: recommend the most popular movies
+"""
+
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+# Baseline model: recommend the most popular movies
+most_popular = ratings.groupby('movieId').size().sort_values(ascending=False).index[:5]
+
+print("Most Popular Movies:")
+for movie_id in most_popular:
+    movie_title = movies[movies['movieId'] == movie_id]['title'].values[0]
+    print(f"Movie ID: {movie_id}, Title: {movie_title}")
+
+# Baseline RMSE (assuming using mean rating as prediction)
+mean_rating = ratings['rating'].mean()
+baseline_rmse = sqrt(mean_squared_error(ratings['rating'], np.full_like(ratings['rating'], mean_rating)))
+print(f"Baseline RMSE: {baseline_rmse}")
+
+"""## 2.Use KNNBasic for user-based collaborative filtering"""
+
+from sklearn.metrics.pairwise import cosine_similarity
+from surprise import Dataset, Reader, KNNBasic
+from surprise import accuracy
+from surprise.model_selection import train_test_split as surprise_train_test_split
+from collections import defaultdict
+
+# Load the data into Surprise format
+reader = Reader(rating_scale=(1, 5))
+data = Dataset.load_from_df(ratings[['userId', 'movieId', 'rating']], reader)
+
+# Split data into train and test sets
+trainset, testset = surprise_train_test_split(data, test_size=0.25, random_state=42)
+
+# Use KNNBasic for user-based collaborative filtering
+algo_user_based = KNNBasic(sim_options={'user_based': True})
+algo_user_based.fit(trainset)
+predictions_user_based = algo_user_based.test(testset)
+
+# Calculate RMSE
+user_based_rmse = accuracy.rmse(predictions_user_based)
+
+# Helper Functions for Precision and Recall at k
+def precision_at_k(predictions, k=10, threshold=3.5):
+    '''Return precision at k metric for each user and averaged over all users.'''
+    # First map the predictions to each user.
+    user_est_true = defaultdict(list)
+    for uid, _, true_r, est, _ in predictions:
+        user_est_true[uid].append((est, true_r))
+
+    precisions = dict()
+    for uid, user_ratings in user_est_true.items():
+        # Sort user ratings by estimated value
+        user_ratings.sort(key=lambda x: x[0], reverse=True)
+        # Number of relevant items in top k
+        n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
+        # Precision at k: relevant items / k
+        precisions[uid] = n_relevant / k
+
+    # Average precision at k over all users
+    return sum(prec for prec in precisions.values()) / len(precisions)
+
+def recall_at_k(predictions, k=10, threshold=3.5):
+    '''Return recall at k metric for each user and averaged over all users.'''
+    # First map the predictions to each user.
+    user_est_true = defaultdict(list)
+    for uid, _, true_r, est, _ in predictions:
+        user_est_true[uid].append((est, true_r))
+
+    recalls = dict()
+    for uid, user_ratings in user_est_true.items():
+        # Sort user ratings by estimated value
+        user_ratings.sort(key=lambda x: x[0], reverse=True)
+        # Number of relevant items in top k
+        n_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings[:k])
+        # Number of relevant items in the whole set
+        n_possible = sum((true_r >= threshold) for (_, true_r) in user_ratings)
+        # Recall at k: relevant items in top k / relevant items in the whole set
+        recalls[uid] = n_relevant / n_possible if n_possible != 0 else 1
+
+    # Average recall at k over all users
+    return sum(rec for rec in recalls.values()) / len(recalls)
+
+# Calculate other metrics (precision, recall, F1)
+user_based_precision = precision_at_k(predictions_user_based, k=5, threshold=4)
+user_based_recall = recall_at_k(predictions_user_based, k=5, threshold=4)
+user_based_f1 = 2 * (user_based_precision * user_based_recall) / (user_based_precision + user_based_recall)
+
+print(f"User-Based CF RMSE: {user_based_rmse}")
+print(f"User-Based CF Precision: {user_based_precision}")
+print(f"User-Based CF Recall: {user_based_recall}")
+print(f"User-Based CF F1: {user_based_f1}")
+
+"""## 3.Use KNNBasic for item-based collaborative filtering
+
+"""
+
+# Use KNNBasic for item-based collaborative filtering
+algo_item_based = KNNBasic(sim_options={'user_based': False})
+algo_item_based.fit(trainset)
+predictions_item_based = algo_item_based.test(testset)
+
+# Calculate RMSE
+item_based_rmse = accuracy.rmse(predictions_item_based)
+
+# Other metrics (precision, recall, F1)
+item_based_precision = precision_at_k(predictions_item_based, k=5, threshold=4)
+item_based_recall = recall_at_k(predictions_item_based, k=5, threshold=4)
+item_based_f1 = 2 * (item_based_precision * item_based_recall) / (item_based_precision + item_based_recall)
+
+print(f"Item-Based CF RMSE: {item_based_rmse}")
+print(f"Item-Based CF Precision: {item_based_precision}")
+print(f"Item-Based CF Recall: {item_based_recall}")
+print(f"Item-Based CF F1: {item_based_f1}")
+
+"""## 4.Use SVD for matrix factorization
+
+"""
+
+from surprise import SVD
+
+# Use SVD for matrix factorization
+algo_svd = SVD()
+algo_svd.fit(trainset)
+predictions_svd = algo_svd.test(testset)
+
+# Calculate RMSE
+svd_rmse = accuracy.rmse(predictions_svd)
+
+# Other metrics (precision, recall, F1)
+svd_precision = precision_at_k(predictions_svd, k=5, threshold=4)
+svd_recall = recall_at_k(predictions_svd, k=5, threshold=4)
+svd_f1 = 2 * (svd_precision * svd_recall) / (svd_precision + svd_recall)
+
+print(f"SVD RMSE: {svd_rmse}")
+print(f"SVD Precision: {svd_precision}")
+print(f"SVD Recall: {svd_recall}")
+print(f"SVD F1: {svd_f1}")
+
+"""## 5.Hybrid Model"""
+
+# Assume we have user-based and item-based CF predictions stored
+user_based_predictions = algo_user_based.test(testset)
+item_based_predictions = algo_item_based.test(testset)
+
+# Combine the predictions (simple average)
+hybrid_predictions = []
+for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions):
+    hybrid_est = (ub_pred.est + ib_pred.est) / 2
+    hybrid_predictions.append(surprise.Prediction(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, hybrid_est, ub_pred.details))
+
+# Calculate RMSE
+hybrid_rmse = accuracy.rmse(hybrid_predictions)
+
+# Other metrics (precision, recall, F1)
+hybrid_precision = precision_at_k(hybrid_predictions, k=5, threshold=4)
+hybrid_recall = recall_at_k(hybrid_predictions, k=5, threshold=4)
+hybrid_f1 = 2 * (hybrid_precision * hybrid_recall) / (hybrid_precision + hybrid_recall)
+
+print(f"Hybrid Model RMSE: {hybrid_rmse}")
+print(f"Hybrid Model Precision: {hybrid_precision}")
+print(f"Hybrid Model Recall: {hybrid_recall}")
+print(f"Hybrid Model F1: {hybrid_f1}")
+
+# Example values (replace with your actual computed metrics)
+metrics = ['RMSE', 'Precision', 'Recall', 'F1 Score']
+values = [0.8894, 0.6925, 0.4322, 0.5322]  # Example values, replace with your actual computed metrics
+
+# Plotting
+plt.figure(figsize=(6, 4))
+bars = plt.bar(metrics, values, color=['blue', 'green', 'orange', 'red'])
+
+# Adding text annotations
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2, yval + 0.01, round(yval, 4), ha='center', va='bottom')
+
+# Adding labels and title
+plt.title('Performance Metrics of Hybrid Model')
+plt.xlabel('Metrics')
+plt.ylabel('Score')
+
+# Display the plot
+plt.show()
+
+"""#**MODEL EVALUATION**
+
+**# 1.Most Popular Movies (Baseline)**:
+
+RMSE: 1.0425  
+on average, the predictions are off by around 1.0425 units (which typically corresponds to the rating scale used.
+
+
+**# 2.User-Based Collaborative Filtering:**
+
+
+RMSE: 0.9562
+
+Precision: 0.6895
+
+Recall: 0.4325
+
+F1 Score: 0.5316
+
+predictions are more accurate than the baseline, reducing the average error in predictions.
+successfully recommends relevant movies to users with a good balance between precision and recall.
+
+**# 3.Item-Based Collaborative Filtering:**
+
+RMSE: 0.9162
+
+Precision: 0.6574
+
+Recall: 0.4176
+
+F1 Score: 0.5108
+
+suggests further improvement in prediction accuracy compared to user-based CF and the baseline.
+performs well but
+
+
+**#4.SVD (Matrix Factorization):**
+
+RMSE: 0.8828
+
+Precision: 0.6911
+
+Recall: 0.4282
+
+F1 Score: 0.5288
+
+better accuracy than both CF methods and the baseline, indicating it can make more precise predictions.
+competitive performance with high precision and balanced recall, indicating effective recommendations.
+
+
+
+**#5.Hybrid Model (Combination of CF and Content-Based)**:
+
+RMSE: 0.8894
+
+Precision: 0.6925
+
+Recall: 0.4322
+
+F1 Score: 0.5322
+
+strong performance, slightly below SVD but still significantly better than baseline and CF methods.
+performs similarly to SVD, demonstrating robustness in recommending relevant movies with high precision and recall.
+
+### **COLDSTART PROBLEM**
+"""
+
+n_movies = movies['movieId'].nunique()
+print(f"There are {n_movies} unique movies in our movies dataset.")
+
+genres = set(g for G in movies['genres'] for g in G)
+
+for g in genres:
+    movies[g] = movies.genres.transform(lambda x: int(g in x))
+
+movie_genres = movies.drop(columns=['movieId', 'title','genres'])
+
+movie_genres.head()
+
+from sklearn.metrics.pairwise import cosine_similarity
+
+cosine_sim = cosine_similarity(movie_genres, movie_genres)
+print(f"Dimensions of our genres cosine similarity matrix: {cosine_sim.shape}")
+
+"""### **ITEM-ITEM RECOMMENDER**"""
+
+from sklearn.neighbors import NearestNeighbors
+
+def find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, k, metric='cosine'):
+    X = X.T
+    neighbour_ids = []
+
+    movie_ind = movie_mapper[movie_id]
+    movie_vec = X[movie_ind]
+    if isinstance(movie_vec, (np.ndarray)):
+        movie_vec = movie_vec.reshape(1,-1)
+    # use k+1 since kNN output includes the movieId of interest
+    kNN = NearestNeighbors(n_neighbors=k+1, algorithm="brute", metric=metric)
+    kNN.fit(X)
+    neighbour = kNN.kneighbors(movie_vec, return_distance=False)
+    for i in range(0,k):
+        n = neighbour.item(i)
+        neighbour_ids.append(movie_inv_mapper[n])
+    neighbour_ids.pop(0)
+    return neighbour_ids
+
+"""find_similar_movies() takes in a movieId and X matrix mapper, and outputs a list of movies that are similar to the movieId of interest."""
+
+similar_movies = find_similar_movies(1, X, movie_mapper, movie_inv_mapper, k=10)
+similar_movies
+
+"""find_similar_movies() returns a list of movieId's that are most similar to your movie of interest.
+
+converting movie id to titles for movie it to tilte for title title recommendations
+"""
+
+movie_titles = dict(zip(movies['movieId'], movies['title']))
+
+movie_id = 1
+
+similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='cosine', k=20)
+movie_title = movie_titles[movie_id]
+
+print(f"Because you watched {movie_title}:")
+for i in similar_movies:
+    print(movie_titles[i])
+
+"""this shows the 20 movies that are most similar to Toy Story (1995) movie. this only uses user ratings"""
+
+#using eucledian metric
+movie_id = 2
+
+similar_movies = find_similar_movies(movie_id, X, movie_mapper, movie_inv_mapper, metric='euclidean', k=20)
+movie_title = movie_titles[movie_id]
+
+print(f"Because you watched {movie_title}:")
+for i in similar_movies:
+    print(movie_titles[i])
+
+"""### **MOVIE FINDER FROM KNEAREST ITEM ITEM RECOMMENDER**
+
+
+"""
+
+# pip install fuzzywuzzy
+
+# pip install thefuzz
+
+from fuzzywuzzy import process
+
+#for similarity incase of spelling or ommisions to give most similar title
+def movie_finder(title):
+    all_titles = movies['title'].tolist()
+    closest_match = process.extractOne(title,all_titles)
+    return closest_match[0]
+
+title = movie_finder('ForRet Gmp')
+title
+
+"""**FUZZY WUZZY WORKS**
+
+movie index mapper which maps a movie title to the index that it represents in our matrix.
+"""
+
+movie_idx = dict(zip(movies['title'], list(movies.index)))
+idx = movie_idx[title]
+print(f"Movie index for 'Forrest Gump (1994)': {idx}")
+
+"""Using this handy movie_idx dictionary, we know that Jumanji is represented by index 1 in our matrix. Let's get the top 10 most similar movies to Jumanji."""
+
+n_recommendations=10
+sim_scores = list(enumerate(cosine_sim[idx]))
+sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+sim_scores = sim_scores[1:(n_recommendations+1)]
+similar_movies = [i[0] for i in sim_scores]
+
+print(f"Because you watched {title}:")
+movies['title'].iloc[similar_movies]
+
+print(f"Because you watched {title}:")
+movies['title'].iloc[similar_movies]
+
+"""these recommendationms are similar to forest gump
+
+to get recommendations for other films
+"""
+
+def get_content_based_recommendations(title_string, n_recommendations=10):
+    title = movie_finder(title_string)
+    idx = movie_idx[title]
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:(n_recommendations+1)]
+    similar_movies = [i[0] for i in sim_scores]
+    print(f"Because you watched {title}:")
+    print(movies['title'].iloc[similar_movies])
+
+get_content_based_recommendations('No Game No Life: Zero (2017)', 15)
+
+"""#### **DIMENSIONALITY REDUCTION**"""
+
+from sklearn.decomposition import TruncatedSVD
+
+svd = TruncatedSVD(n_components=20, n_iter=10)
+Q = svd.fit_transform(X.T)
+Q.shape
+
+movie_id = 1
+similar_movies = find_similar_movies(movie_id, Q.T, movie_mapper, movie_inv_mapper, metric='cosine', k=10)
+movie_title = movie_titles[movie_id]
+
+print(f"Because you watched {movie_title}:")
+for i in similar_movies:
+    print(movie_titles[i])
+
+"""The results above are the most similar movies to Toy Story using kNN on our “compressed” movie-factor matrix. We reduced the dimensions down to n_components=20. We can think of each component representing a latent feature such as movie genre.
+
+# **CONCLUSIONS**
+
+By leveraging the MovieLens dataset and implementing collaborative filtering techniques, this project aims to deliver a robust movie recommendation system. The insights gained from this system not only benefit users by providing personalized movie suggestions but also provide valuable learning in the field of recommendation systems.
+
+# **RECOMMENDATIONS**
+"""
+
+# Hybrid Recommendations with Input Functions
+
+def get_hybrid_recommendations(user_id, n=5):
+    # User-based CF predictions
+    user_based_predictions = algo_user_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
+
+    # Item-based CF predictions
+    item_based_predictions = algo_item_based.test([(user_id, movie_id, 0) for movie_id in movies['movieId'].unique()])
+
+    # Combine predictions from both models
+    hybrid_predictions = [(ub_pred.uid, ub_pred.iid, ub_pred.r_ui, (ub_pred.est + ib_pred.est) / 2, ub_pred.details)
+                          for ub_pred, ib_pred in zip(user_based_predictions, item_based_predictions)]
+
+    # Sort predictions by estimated rating in descending order
+    hybrid_predictions.sort(key=lambda x: x[3], reverse=True)
+
+    # Select top n recommendations
+    top_recommendations = hybrid_predictions[:n]
+
+    # Extract movie titles for recommendations
+    recommendations = [movies[movies['movieId'] == pred[1]]['title'].values[0] for pred in top_recommendations]
+
+    return recommendations
+
+# Input function for user ID
+def get_user_id():
+    return int(input("Enter the user ID: "))
+
+# Input function for number of recommendations
+def get_num_recommendations():
+    return int(input("Enter the number of recommendations: "))
+
+# Get user ID and number of recommendations
+user_id = get_user_id()
+num_recommendations = get_num_recommendations()
+
+# Generate hybrid recommendations
+print("Hybrid Recommendations:")
+print(get_hybrid_recommendations(user_id, num_recommendations))
+
+"""# **REFERENCES**
+
+1.   MovieLens
+2.   Kaggle
+"""
