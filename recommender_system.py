@@ -87,7 +87,7 @@ import necessary libraries
 """
 
 # import scikit-learn as sklearn
-import wordcloud
+# import wordcloud
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
