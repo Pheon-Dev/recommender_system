@@ -600,193 +600,193 @@ for i, column in enumerate(numerical_columns, 1):
 plt.tight_layout()
 plt.show()
 
-"""OBSERVATIONS
-There is presence of outliers in movieId and imdbId however they are identifiers, and treating them as numerical values for outlier removal can lead to incorrect data processing.So we keep the outliers.
-
-# **DATA PREPROCESSING**
-
-#Data Encoding
-"""
-
-# Check if 'genres' column exists in the DataFrame
-if 'genres' in data.columns:
-    # Convert genres to a list of genres
-    data['genres'] = data['genres'].str.split('|')
-
-    # Convert the list of genres into separate columns
-    data = data.explode('genres')
-
-    # One-hot encode genres
-    data = pd.get_dummies(data, columns=['genres'], prefix='', prefix_sep='')
-    print(data)
-else:
-    print("Error: 'genres' column not found in the DataFrame. It may have been overwritten.")
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-
- #Your specific user IDs
-userid_x = 1  # Replace with the actual user ID
-userid_y = 2  # Replace with the actual user ID
-
-# Include the specific user IDs in the dataset
-additional_users = pd.DataFrame({'userId': [userid_x, userid_y], 'movieId': [0, 0], 'rating': [0, 0]})
-data = pd.concat([data, additional_users], ignore_index=True)
-
-# Encode userId and movieId
-user_encoder = LabelEncoder()
-movie_encoder = LabelEncoder()
-
-data['userId'] = user_encoder.fit_transform(data['userId'])
-data['movieId'] = movie_encoder.fit_transform(data['movieId'])
-
-# Encode the specific user IDs
-encoded_userid_x = user_encoder.transform([userid_x])[0]
-encoded_userid_y = user_encoder.transform([userid_y])[0]
-
-"""# Standardisation
-
-"""
-
-from sklearn.preprocessing import StandardScaler
-
-# Normalize rating column (example)
-scaler = StandardScaler()
-data['rating'] = scaler.fit_transform(data[['rating']])
-data
-
-"""#Principal Component Analysis(PCA)"""
-
-from sklearn.decomposition import PCA
-from sklearn.impute import SimpleImputer
-
-# Select numerical columns for PCA
-numerical_columns = ['rating', 'timestamp_x', 'timestamp_y']
-
-# Impute missing values with the mean
-imputer = SimpleImputer(strategy='mean')
-data[numerical_columns] = imputer.fit_transform(data[numerical_columns])
-
-# Apply PCA
-pca = PCA(n_components=2)  # Choose the number of components
-principal_components = pca.fit_transform(data[numerical_columns])
-
-# Create a DataFrame with the principal components
-pca_df = pd.DataFrame(data=principal_components, columns=['principal_component_1', 'principal_component_2'])
-
-# Make a copy of the original DataFrame to avoid modifying it in place
-data_copy = data.copy()
-
-# Reset index of both DataFrames to ensure there are no duplicate indices
-data_copy.reset_index(drop=True, inplace=True)
-pca_df.reset_index(drop=True, inplace=True)
-
-# Concatenate the principal components with the copy of the original DataFrame
-data_with_pca = pd.concat([data_copy, pca_df], axis=1)
-
-# Display the new DataFrame with PCA components
-data_with_pca.head()
-
-# Plot the PCA components
-plt.figure(figsize=(10, 7))
-plt.scatter(pca_df['principal_component_1'], pca_df['principal_component_2'])
-plt.title('PCA of MovieLens Data')
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
-plt.grid(True)
-plt.show()
-
-# Prepare the data for the model
-X = data[['userId', 'movieId']].values
-y = data['rating'].values
-
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-"""### **Data Sparcity**"""
-
-from scipy.sparse import csr_matrix
-
-def create_X(df):
-    """
-    Generates a sparse matrix from ratings dataframe.
-
-    Args:
-        df: pandas dataframe containing 3 columns (userId, movieId, rating)
-
-    Returns:
-        X: sparse matrix
-        user_mapper: dict that maps user id's to user indices
-        user_inv_mapper: dict that maps user indices to user id's
-        movie_mapper: dict that maps movie id's to movie indices
-        movie_inv_mapper: dict that maps movie indices to movie id's
-    """
-    M = df['userId'].nunique()
-    N = df['movieId'].nunique()
-
-    user_mapper = dict(zip(np.unique(df["userId"]), list(range(M))))
-    movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(N))))
-
-    user_inv_mapper = dict(zip(list(range(M)), np.unique(df["userId"])))
-    movie_inv_mapper = dict(zip(list(range(N)), np.unique(df["movieId"])))
-
-    user_index = [user_mapper[i] for i in df['userId']]
-    item_index = [movie_mapper[i] for i in df['movieId']]
-
-    X = csr_matrix((df["rating"], (user_index,item_index)), shape=(M,N))
-    return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
-
-X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
-
-X.shape
-
-"""Our X matrix contains 610 users and 9724  movies.
-
-Evaluating sparsity
-
-Here, we calculate sparsity by dividing the number of stored elements by total number of elements. The number of stored (non-empty) elements in our matrix (nnz) is equivalent to the number of ratings in our dataset.
-"""
-
-n_total = X.shape[0]*X.shape[1]
-n_ratings = X.nnz
-sparsity = n_ratings/n_total
-print(f"Matrix sparsity: {round(sparsity*100,2)}%")
-
-"""check which users and movies have few interactions."""
-
-n_ratings_per_user = X.getnnz(axis=1)
-len(n_ratings_per_user)
-
-print(f"Most active user rated {n_ratings_per_user.max()} movies.")
-print(f"Least active user rated {n_ratings_per_user.min()} movies.")
-
-n_ratings_per_movie = X.getnnz(axis=0)
-len(n_ratings_per_movie)
-
-print(f"Most rated movie has {n_ratings_per_movie.max()} ratings.")
-print(f"Least rated movie has {n_ratings_per_movie.min()} ratings.")
-
-plt.figure(figsize=(16, 4))
-
-# Plot for number of ratings per user
-plt.subplot(1, 2, 1)
-sns.kdeplot(n_ratings_per_user, fill=True)
-plt.xlim(0)
-plt.title("Number of Ratings Per User", fontsize=14)
-plt.xlabel("Number of Ratings per User")
-plt.ylabel("Density")
-
-# Plot for number of ratings per movie
-plt.subplot(1, 2, 2)
-sns.kdeplot(n_ratings_per_movie, fill=True)
-plt.xlim(0)
-plt.title("Number of Ratings Per Movie", fontsize=14)
-plt.xlabel("Number of Ratings per Movie")
-plt.ylabel("Density")
-
-plt.tight_layout()
-plt.show()
-
+# """OBSERVATIONS
+# There is presence of outliers in movieId and imdbId however they are identifiers, and treating them as numerical values for outlier removal can lead to incorrect data processing.So we keep the outliers.
+#
+# # **DATA PREPROCESSING**
+#
+# #Data Encoding
+# """
+#
+# # Check if 'genres' column exists in the DataFrame
+# if 'genres' in data.columns:
+#     # Convert genres to a list of genres
+#     data['genres'] = data['genres'].str.split('|')
+#
+#     # Convert the list of genres into separate columns
+#     data = data.explode('genres')
+#
+#     # One-hot encode genres
+#     data = pd.get_dummies(data, columns=['genres'], prefix='', prefix_sep='')
+#     print(data)
+# else:
+#     print("Error: 'genres' column not found in the DataFrame. It may have been overwritten.")
+#
+# from sklearn.model_selection import train_test_split
+# from sklearn.preprocessing import LabelEncoder
+#
+#  #Your specific user IDs
+# userid_x = 1  # Replace with the actual user ID
+# userid_y = 2  # Replace with the actual user ID
+#
+# # Include the specific user IDs in the dataset
+# additional_users = pd.DataFrame({'userId': [userid_x, userid_y], 'movieId': [0, 0], 'rating': [0, 0]})
+# data = pd.concat([data, additional_users], ignore_index=True)
+#
+# # Encode userId and movieId
+# user_encoder = LabelEncoder()
+# movie_encoder = LabelEncoder()
+#
+# data['userId'] = user_encoder.fit_transform(data['userId'])
+# data['movieId'] = movie_encoder.fit_transform(data['movieId'])
+#
+# # Encode the specific user IDs
+# encoded_userid_x = user_encoder.transform([userid_x])[0]
+# encoded_userid_y = user_encoder.transform([userid_y])[0]
+#
+# """# Standardisation
+#
+# """
+#
+# from sklearn.preprocessing import StandardScaler
+#
+# # Normalize rating column (example)
+# scaler = StandardScaler()
+# data['rating'] = scaler.fit_transform(data[['rating']])
+# data
+#
+# """#Principal Component Analysis(PCA)"""
+#
+# from sklearn.decomposition import PCA
+# from sklearn.impute import SimpleImputer
+#
+# # Select numerical columns for PCA
+# numerical_columns = ['rating', 'timestamp_x', 'timestamp_y']
+#
+# # Impute missing values with the mean
+# imputer = SimpleImputer(strategy='mean')
+# data[numerical_columns] = imputer.fit_transform(data[numerical_columns])
+#
+# # Apply PCA
+# pca = PCA(n_components=2)  # Choose the number of components
+# principal_components = pca.fit_transform(data[numerical_columns])
+#
+# # Create a DataFrame with the principal components
+# pca_df = pd.DataFrame(data=principal_components, columns=['principal_component_1', 'principal_component_2'])
+#
+# # Make a copy of the original DataFrame to avoid modifying it in place
+# data_copy = data.copy()
+#
+# # Reset index of both DataFrames to ensure there are no duplicate indices
+# data_copy.reset_index(drop=True, inplace=True)
+# pca_df.reset_index(drop=True, inplace=True)
+#
+# # Concatenate the principal components with the copy of the original DataFrame
+# data_with_pca = pd.concat([data_copy, pca_df], axis=1)
+#
+# # Display the new DataFrame with PCA components
+# data_with_pca.head()
+#
+# # Plot the PCA components
+# plt.figure(figsize=(10, 7))
+# plt.scatter(pca_df['principal_component_1'], pca_df['principal_component_2'])
+# plt.title('PCA of MovieLens Data')
+# plt.xlabel('Principal Component 1')
+# plt.ylabel('Principal Component 2')
+# plt.grid(True)
+# plt.show()
+#
+# # Prepare the data for the model
+# X = data[['userId', 'movieId']].values
+# y = data['rating'].values
+#
+# # Split the data
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+#
+# """### **Data Sparcity**"""
+#
+# from scipy.sparse import csr_matrix
+#
+# def create_X(df):
+#     """
+#     Generates a sparse matrix from ratings dataframe.
+#
+#     Args:
+#         df: pandas dataframe containing 3 columns (userId, movieId, rating)
+#
+#     Returns:
+#         X: sparse matrix
+#         user_mapper: dict that maps user id's to user indices
+#         user_inv_mapper: dict that maps user indices to user id's
+#         movie_mapper: dict that maps movie id's to movie indices
+#         movie_inv_mapper: dict that maps movie indices to movie id's
+#     """
+#     M = df['userId'].nunique()
+#     N = df['movieId'].nunique()
+#
+#     user_mapper = dict(zip(np.unique(df["userId"]), list(range(M))))
+#     movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(N))))
+#
+#     user_inv_mapper = dict(zip(list(range(M)), np.unique(df["userId"])))
+#     movie_inv_mapper = dict(zip(list(range(N)), np.unique(df["movieId"])))
+#
+#     user_index = [user_mapper[i] for i in df['userId']]
+#     item_index = [movie_mapper[i] for i in df['movieId']]
+#
+#     X = csr_matrix((df["rating"], (user_index,item_index)), shape=(M,N))
+#     return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
+#
+# X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
+#
+# X.shape
+#
+# """Our X matrix contains 610 users and 9724  movies.
+#
+# Evaluating sparsity
+#
+# Here, we calculate sparsity by dividing the number of stored elements by total number of elements. The number of stored (non-empty) elements in our matrix (nnz) is equivalent to the number of ratings in our dataset.
+# """
+#
+# n_total = X.shape[0]*X.shape[1]
+# n_ratings = X.nnz
+# sparsity = n_ratings/n_total
+# print(f"Matrix sparsity: {round(sparsity*100,2)}%")
+#
+# """check which users and movies have few interactions."""
+#
+# n_ratings_per_user = X.getnnz(axis=1)
+# len(n_ratings_per_user)
+#
+# print(f"Most active user rated {n_ratings_per_user.max()} movies.")
+# print(f"Least active user rated {n_ratings_per_user.min()} movies.")
+#
+# n_ratings_per_movie = X.getnnz(axis=0)
+# len(n_ratings_per_movie)
+#
+# print(f"Most rated movie has {n_ratings_per_movie.max()} ratings.")
+# print(f"Least rated movie has {n_ratings_per_movie.min()} ratings.")
+#
+# plt.figure(figsize=(16, 4))
+#
+# # Plot for number of ratings per user
+# plt.subplot(1, 2, 1)
+# sns.kdeplot(n_ratings_per_user, fill=True)
+# plt.xlim(0)
+# plt.title("Number of Ratings Per User", fontsize=14)
+# plt.xlabel("Number of Ratings per User")
+# plt.ylabel("Density")
+#
+# # Plot for number of ratings per movie
+# plt.subplot(1, 2, 2)
+# sns.kdeplot(n_ratings_per_movie, fill=True)
+# plt.xlim(0)
+# plt.title("Number of Ratings Per Movie", fontsize=14)
+# plt.xlabel("Number of Ratings per Movie")
+# plt.ylabel("Density")
+#
+# plt.tight_layout()
+# plt.show()
+#
 # """#**MODELLING**
 #
 # ## 1.Baseline model: recommend the most popular movies
