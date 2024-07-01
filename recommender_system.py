@@ -97,7 +97,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 #pd.set_option('max_columns',20)
 # !pip3 install scikit-surprise
-import surprise
+import scikit_surprise as surprise
 from surprise import Dataset, Reader, SVD, accuracy
 from surprise.model_selection import train_test_split as surprise_train_test_split
 
