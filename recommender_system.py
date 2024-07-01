@@ -86,7 +86,7 @@ Monitor user engagement metrics, such as click-through rates on recommended movi
 import necessary libraries
 """
 
-import sklearn
+import scikit-learn as sklearn
 import wordcloud
 import pandas as pd
 import numpy as np
