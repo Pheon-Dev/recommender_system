@@ -386,62 +386,62 @@ plt.show()
 
 # #### 6.**Most Active Users**
 # """
-#
-# #Most Active users
-# # Assuming ratings_per_user is a Series with user IDs as the index and number of ratings as values
-# top_users = ratings_per_user.sort_values(ascending=False).head(20)
-#
-# # Create a DataFrame from the Series for easier manipulation
-# top_users_df = top_users.reset_index()
-# top_users_df.columns = ['user_id', 'num_ratings']
-#
-# # Create a categorical variable for hue based on number of ratings
-# top_users_df['activity_level'] = pd.cut(top_users_df['num_ratings'], bins=3, labels=['Low', 'Medium', 'High'])
-#
-# plt.figure(figsize=(10, 6))
-# sns.barplot(x='num_ratings', y='user_id', hue='activity_level', data=top_users_df, palette='plasma')
-# plt.title('Top 20 Most Active Users')
-# plt.xlabel('Number of Ratings')
-# plt.ylabel('User ID')
-# plt.show()
-#
-# """### **Observations**: Most users have low activity level
-#
-# #### 7.**WordCloud of Genres**
-# """
-#
-# #WordCloud of genres
-# from wordcloud import WordCloud
-#
-# all_genres = ' '.join(movies['genres'].dropna().astype(str))
-#
-# wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_genres)
-#
-# plt.figure(figsize=(10, 6))
-# plt.imshow(wordcloud, interpolation='bilinear')
-# plt.axis('off')
-# plt.title('Word Cloud of Genres')
-# plt.show()
-#
-# """### **Observations**: Comedy,Drama,Action,Adventure,Sci-Fi and Romance are the most popular genres.
-#
-# #### 8.**Most Common Tags**
-# """
-#
-# #Most common Tags
-# common_tags = tags['tag'].value_counts().head(20)  # Top 20 tags
-# plt.figure(figsize=(10, 6))
-# sns.barplot(x=common_tags.values, y=common_tags.index)
-# plt.title('Most Common Tags')
-# plt.xlabel('Frequency')
-# plt.ylabel('Tag')
-# plt.show()
-#
-# """### **Observations**: In Netflix Queue is the most common Tag.
-#
-# #### 9.**WordCloud of Movie Tags**
-# """
-#
+
+#Most Active users
+# Assuming ratings_per_user is a Series with user IDs as the index and number of ratings as values
+top_users = ratings_per_user.sort_values(ascending=False).head(20)
+
+# Create a DataFrame from the Series for easier manipulation
+top_users_df = top_users.reset_index()
+top_users_df.columns = ['user_id', 'num_ratings']
+
+# Create a categorical variable for hue based on number of ratings
+top_users_df['activity_level'] = pd.cut(top_users_df['num_ratings'], bins=3, labels=['Low', 'Medium', 'High'])
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x='num_ratings', y='user_id', hue='activity_level', data=top_users_df, palette='plasma')
+plt.title('Top 20 Most Active Users')
+plt.xlabel('Number of Ratings')
+plt.ylabel('User ID')
+plt.show()
+
+"""### **Observations**: Most users have low activity level
+
+#### 7.**WordCloud of Genres**
+"""
+
+#WordCloud of genres
+from wordcloud import WordCloud
+
+all_genres = ' '.join(movies['genres'].dropna().astype(str))
+
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_genres)
+
+plt.figure(figsize=(10, 6))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Word Cloud of Genres')
+plt.show()
+
+"""### **Observations**: Comedy,Drama,Action,Adventure,Sci-Fi and Romance are the most popular genres.
+
+#### 8.**Most Common Tags**
+"""
+
+#Most common Tags
+common_tags = tags['tag'].value_counts().head(20)  # Top 20 tags
+plt.figure(figsize=(10, 6))
+sns.barplot(x=common_tags.values, y=common_tags.index)
+plt.title('Most Common Tags')
+plt.xlabel('Frequency')
+plt.ylabel('Tag')
+plt.show()
+
+"""### **Observations**: In Netflix Queue is the most common Tag.
+
+#### 9.**WordCloud of Movie Tags**
+"""
+
 # #World cloud of movie tags
 # from wordcloud import WordCloud
 #
