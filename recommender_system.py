@@ -648,61 +648,61 @@ encoded_userid_y = user_encoder.transform([userid_y])[0]
 
 """
 
-# from sklearn.preprocessing import StandardScaler
-#
-# # Normalize rating column (example)
-# scaler = StandardScaler()
-# data['rating'] = scaler.fit_transform(data[['rating']])
-# data
-#
-# """#Principal Component Analysis(PCA)"""
-#
-# from sklearn.decomposition import PCA
-# from sklearn.impute import SimpleImputer
-#
-# # Select numerical columns for PCA
-# numerical_columns = ['rating', 'timestamp_x', 'timestamp_y']
-#
-# # Impute missing values with the mean
-# imputer = SimpleImputer(strategy='mean')
-# data[numerical_columns] = imputer.fit_transform(data[numerical_columns])
-#
-# # Apply PCA
-# pca = PCA(n_components=2)  # Choose the number of components
-# principal_components = pca.fit_transform(data[numerical_columns])
-#
-# # Create a DataFrame with the principal components
-# pca_df = pd.DataFrame(data=principal_components, columns=['principal_component_1', 'principal_component_2'])
-#
-# # Make a copy of the original DataFrame to avoid modifying it in place
-# data_copy = data.copy()
-#
-# # Reset index of both DataFrames to ensure there are no duplicate indices
-# data_copy.reset_index(drop=True, inplace=True)
-# pca_df.reset_index(drop=True, inplace=True)
-#
-# # Concatenate the principal components with the copy of the original DataFrame
-# data_with_pca = pd.concat([data_copy, pca_df], axis=1)
-#
-# # Display the new DataFrame with PCA components
-# data_with_pca.head()
-#
-# # Plot the PCA components
-# plt.figure(figsize=(10, 7))
-# plt.scatter(pca_df['principal_component_1'], pca_df['principal_component_2'])
-# plt.title('PCA of MovieLens Data')
-# plt.xlabel('Principal Component 1')
-# plt.ylabel('Principal Component 2')
-# plt.grid(True)
-# plt.show()
-#
-# # Prepare the data for the model
-# X = data[['userId', 'movieId']].values
-# y = data['rating'].values
-#
-# # Split the data
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-#
+from sklearn.preprocessing import StandardScaler
+
+# Normalize rating column (example)
+scaler = StandardScaler()
+data['rating'] = scaler.fit_transform(data[['rating']])
+data
+
+"""#Principal Component Analysis(PCA)"""
+
+from sklearn.decomposition import PCA
+from sklearn.impute import SimpleImputer
+
+# Select numerical columns for PCA
+numerical_columns = ['rating', 'timestamp_x', 'timestamp_y']
+
+# Impute missing values with the mean
+imputer = SimpleImputer(strategy='mean')
+data[numerical_columns] = imputer.fit_transform(data[numerical_columns])
+
+# Apply PCA
+pca = PCA(n_components=2)  # Choose the number of components
+principal_components = pca.fit_transform(data[numerical_columns])
+
+# Create a DataFrame with the principal components
+pca_df = pd.DataFrame(data=principal_components, columns=['principal_component_1', 'principal_component_2'])
+
+# Make a copy of the original DataFrame to avoid modifying it in place
+data_copy = data.copy()
+
+# Reset index of both DataFrames to ensure there are no duplicate indices
+data_copy.reset_index(drop=True, inplace=True)
+pca_df.reset_index(drop=True, inplace=True)
+
+# Concatenate the principal components with the copy of the original DataFrame
+data_with_pca = pd.concat([data_copy, pca_df], axis=1)
+
+# Display the new DataFrame with PCA components
+data_with_pca.head()
+
+# Plot the PCA components
+plt.figure(figsize=(10, 7))
+plt.scatter(pca_df['principal_component_1'], pca_df['principal_component_2'])
+plt.title('PCA of MovieLens Data')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.grid(True)
+plt.show()
+
+# Prepare the data for the model
+X = data[['userId', 'movieId']].values
+y = data['rating'].values
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 # """### **Data Sparcity**"""
 #
 # from scipy.sparse import csr_matrix
