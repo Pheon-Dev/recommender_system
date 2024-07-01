@@ -703,90 +703,90 @@ y = data['rating'].values
 # Split the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# """### **Data Sparcity**"""
-#
-# from scipy.sparse import csr_matrix
-#
-# def create_X(df):
-#     """
-#     Generates a sparse matrix from ratings dataframe.
-#
-#     Args:
-#         df: pandas dataframe containing 3 columns (userId, movieId, rating)
-#
-#     Returns:
-#         X: sparse matrix
-#         user_mapper: dict that maps user id's to user indices
-#         user_inv_mapper: dict that maps user indices to user id's
-#         movie_mapper: dict that maps movie id's to movie indices
-#         movie_inv_mapper: dict that maps movie indices to movie id's
-#     """
-#     M = df['userId'].nunique()
-#     N = df['movieId'].nunique()
-#
-#     user_mapper = dict(zip(np.unique(df["userId"]), list(range(M))))
-#     movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(N))))
-#
-#     user_inv_mapper = dict(zip(list(range(M)), np.unique(df["userId"])))
-#     movie_inv_mapper = dict(zip(list(range(N)), np.unique(df["movieId"])))
-#
-#     user_index = [user_mapper[i] for i in df['userId']]
-#     item_index = [movie_mapper[i] for i in df['movieId']]
-#
-#     X = csr_matrix((df["rating"], (user_index,item_index)), shape=(M,N))
-#     return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
-#
-# X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
-#
-# X.shape
-#
-# """Our X matrix contains 610 users and 9724  movies.
-#
-# Evaluating sparsity
-#
-# Here, we calculate sparsity by dividing the number of stored elements by total number of elements. The number of stored (non-empty) elements in our matrix (nnz) is equivalent to the number of ratings in our dataset.
-# """
-#
-# n_total = X.shape[0]*X.shape[1]
-# n_ratings = X.nnz
-# sparsity = n_ratings/n_total
-# print(f"Matrix sparsity: {round(sparsity*100,2)}%")
-#
-# """check which users and movies have few interactions."""
-#
-# n_ratings_per_user = X.getnnz(axis=1)
-# len(n_ratings_per_user)
-#
-# print(f"Most active user rated {n_ratings_per_user.max()} movies.")
-# print(f"Least active user rated {n_ratings_per_user.min()} movies.")
-#
-# n_ratings_per_movie = X.getnnz(axis=0)
-# len(n_ratings_per_movie)
-#
-# print(f"Most rated movie has {n_ratings_per_movie.max()} ratings.")
-# print(f"Least rated movie has {n_ratings_per_movie.min()} ratings.")
-#
-# plt.figure(figsize=(16, 4))
-#
-# # Plot for number of ratings per user
-# plt.subplot(1, 2, 1)
-# sns.kdeplot(n_ratings_per_user, fill=True)
-# plt.xlim(0)
-# plt.title("Number of Ratings Per User", fontsize=14)
-# plt.xlabel("Number of Ratings per User")
-# plt.ylabel("Density")
-#
-# # Plot for number of ratings per movie
-# plt.subplot(1, 2, 2)
-# sns.kdeplot(n_ratings_per_movie, fill=True)
-# plt.xlim(0)
-# plt.title("Number of Ratings Per Movie", fontsize=14)
-# plt.xlabel("Number of Ratings per Movie")
-# plt.ylabel("Density")
-#
-# plt.tight_layout()
-# plt.show()
-#
+"""### **Data Sparcity**"""
+
+from scipy.sparse import csr_matrix
+
+def create_X(df):
+    """
+    Generates a sparse matrix from ratings dataframe.
+
+    Args:
+        df: pandas dataframe containing 3 columns (userId, movieId, rating)
+
+    Returns:
+        X: sparse matrix
+        user_mapper: dict that maps user id's to user indices
+        user_inv_mapper: dict that maps user indices to user id's
+        movie_mapper: dict that maps movie id's to movie indices
+        movie_inv_mapper: dict that maps movie indices to movie id's
+    """
+    M = df['userId'].nunique()
+    N = df['movieId'].nunique()
+
+    user_mapper = dict(zip(np.unique(df["userId"]), list(range(M))))
+    movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(N))))
+
+    user_inv_mapper = dict(zip(list(range(M)), np.unique(df["userId"])))
+    movie_inv_mapper = dict(zip(list(range(N)), np.unique(df["movieId"])))
+
+    user_index = [user_mapper[i] for i in df['userId']]
+    item_index = [movie_mapper[i] for i in df['movieId']]
+
+    X = csr_matrix((df["rating"], (user_index,item_index)), shape=(M,N))
+    return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
+
+X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
+
+X.shape
+
+"""Our X matrix contains 610 users and 9724  movies.
+
+Evaluating sparsity
+
+Here, we calculate sparsity by dividing the number of stored elements by total number of elements. The number of stored (non-empty) elements in our matrix (nnz) is equivalent to the number of ratings in our dataset.
+"""
+
+n_total = X.shape[0]*X.shape[1]
+n_ratings = X.nnz
+sparsity = n_ratings/n_total
+print(f"Matrix sparsity: {round(sparsity*100,2)}%")
+
+"""check which users and movies have few interactions."""
+
+n_ratings_per_user = X.getnnz(axis=1)
+len(n_ratings_per_user)
+
+print(f"Most active user rated {n_ratings_per_user.max()} movies.")
+print(f"Least active user rated {n_ratings_per_user.min()} movies.")
+
+n_ratings_per_movie = X.getnnz(axis=0)
+len(n_ratings_per_movie)
+
+print(f"Most rated movie has {n_ratings_per_movie.max()} ratings.")
+print(f"Least rated movie has {n_ratings_per_movie.min()} ratings.")
+
+plt.figure(figsize=(16, 4))
+
+# Plot for number of ratings per user
+plt.subplot(1, 2, 1)
+sns.kdeplot(n_ratings_per_user, fill=True)
+plt.xlim(0)
+plt.title("Number of Ratings Per User", fontsize=14)
+plt.xlabel("Number of Ratings per User")
+plt.ylabel("Density")
+
+# Plot for number of ratings per movie
+plt.subplot(1, 2, 2)
+sns.kdeplot(n_ratings_per_movie, fill=True)
+plt.xlim(0)
+plt.title("Number of Ratings Per Movie", fontsize=14)
+plt.xlabel("Number of Ratings per Movie")
+plt.ylabel("Density")
+
+plt.tight_layout()
+plt.show()
+
 # """#**MODELLING**
 #
 # ## 1.Baseline model: recommend the most popular movies
