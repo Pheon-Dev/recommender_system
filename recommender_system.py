@@ -86,8 +86,6 @@ Monitor user engagement metrics, such as click-through rates on recommended movi
 import necessary libraries
 """
 
-# import scikit-learn as sklearn
-# import wordcloud
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -97,7 +95,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 #pd.set_option('max_columns',20)
 # !pip3 install scikit-surprise
-import scikit-surprise as surprise
+import surprise
 from surprise import Dataset, Reader, SVD, accuracy
 from surprise.model_selection import train_test_split as surprise_train_test_split
 
