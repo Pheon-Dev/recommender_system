@@ -87,8 +87,6 @@ import necessary libraries
 """
 
 import pandas as pd
-# import scikit-surprise
-import scikit-learn as sklearn
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
