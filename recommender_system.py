@@ -787,27 +787,27 @@ plt.ylabel("Density")
 plt.tight_layout()
 plt.show()
 
-# """#**MODELLING**
-#
-# ## 1.Baseline model: recommend the most popular movies
-# """
-#
-# from sklearn.metrics import mean_squared_error
-# from math import sqrt
-#
-# # Baseline model: recommend the most popular movies
-# most_popular = ratings.groupby('movieId').size().sort_values(ascending=False).index[:5]
-#
-# print("Most Popular Movies:")
-# for movie_id in most_popular:
-#     movie_title = movies[movies['movieId'] == movie_id]['title'].values[0]
-#     print(f"Movie ID: {movie_id}, Title: {movie_title}")
-#
-# # Baseline RMSE (assuming using mean rating as prediction)
-# mean_rating = ratings['rating'].mean()
-# baseline_rmse = sqrt(mean_squared_error(ratings['rating'], np.full_like(ratings['rating'], mean_rating)))
-# print(f"Baseline RMSE: {baseline_rmse}")
-#
+"""#**MODELLING**
+
+## 1.Baseline model: recommend the most popular movies
+"""
+
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+# Baseline model: recommend the most popular movies
+most_popular = ratings.groupby('movieId').size().sort_values(ascending=False).index[:5]
+
+print("Most Popular Movies:")
+for movie_id in most_popular:
+    movie_title = movies[movies['movieId'] == movie_id]['title'].values[0]
+    print(f"Movie ID: {movie_id}, Title: {movie_title}")
+
+# Baseline RMSE (assuming using mean rating as prediction)
+mean_rating = ratings['rating'].mean()
+baseline_rmse = sqrt(mean_squared_error(ratings['rating'], np.full_like(ratings['rating'], mean_rating)))
+print(f"Baseline RMSE: {baseline_rmse}")
+
 # """## 2.Use KNNBasic for user-based collaborative filtering"""
 #
 # from sklearn.metrics.pairwise import cosine_similarity
